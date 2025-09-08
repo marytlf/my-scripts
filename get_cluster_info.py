@@ -4,6 +4,25 @@ import subprocess
 import os
 from datetime import datetime
 
+
+def create_incremental_path(base_path):
+    """
+    Creates a unique path by appending an incremental number.
+    e.g., 'file.txt', 'file_1.txt', 'file_2.txt'
+    """
+    if not os.path.exists(base_path):
+        return base_path
+
+    name, ext = os.path.splitext(base_path)
+    counter = 1
+    while True:
+        new_path = f"{name}_{counter}{ext}"
+        if not os.path.exists(new_path):
+            return new_path
+        counter += 1
+
+
+
 def run_cmd(cmd):
     """Run shell command and return output."""
     result = subprocess.run(cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
@@ -236,7 +255,8 @@ def main():
     date_str = datetime.now().strftime("%Y-%m-%d")
     node_name = get_node_name()
 
-    base_dir = f"k8s_backup_{node_name}_{date_str}"
+    base_dir_name = f"k8s_backup_{node_name}_{date_str}"
+    base_dir = create_incremental_path(base_dir_name)
     os.makedirs(base_dir, exist_ok=True)
 
     namespaces = get_all_namespaces()

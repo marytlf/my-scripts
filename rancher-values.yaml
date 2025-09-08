@@ -1,0 +1,126 @@
+addLocal: "true"
+additionalTrustedCAs: false
+agentTLSMode: ""
+antiAffinity: preferred
+auditLog:
+  destination: sidecar
+  enabled: false
+  hostPath: /var/log/rancher/audit/
+  image:
+    pullPolicy: IfNotPresent
+    repository: rancher/mirrored-bci-micro
+    tag: 15.6.24.2
+  level: 0
+  maxAge: 1
+  maxBackup: 1
+  maxSize: 100
+  resources: {}
+bootstrapPassword: admin
+certmanager:
+  version: ""
+customLogos:
+  accessMode: ReadWriteOnce
+  enabled: false
+  size: 1Gi
+  volumeKind: persistentVolumeClaim
+  volumeSubpaths:
+    emberUi: ember
+    vueUi: vue
+debug: true
+extraEnv:
+- name: CATTLE_LOGLEVEL
+  value: debug
+extraNodeSelectorTerms: {}
+extraObjects: []
+extraTolerations: {}
+fleet: ""
+global:
+  cattle:
+    image:
+      tag: head
+hostname: localhost
+imagePullSecrets: []
+ingress:
+  enabled: true
+  extraAnnotations: {}
+  includeDefaultExtraAnnotations: true
+  ingressClassName: ""
+  path: /
+  pathType: ImplementationSpecific
+  servicePort: 80
+  tls:
+    secretName: tls-rancher-ingress
+    source: letsEncrypt
+letsEncrypt:
+  email: mary@suse.com
+  environment: production
+  ingress:
+    class: ""
+livenessProbe:
+  failureThreshold: 5
+  periodSeconds: 30
+  timeoutSeconds: 5
+noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local
+postDelete:
+  enabled: true
+  ignoreTimeoutError: false
+  image:
+    repository: rancher/shell
+    tag: v0.5.0
+  namespaceList:
+  - cattle-fleet-system
+  - cattle-system
+  - rancher-operator-system
+  timeout: 120
+preUpgrade:
+  image:
+    repository: rancher/shell
+    tag: v0.5.0
+priorityClassName: rancher-critical
+privateCA: false
+rancherImage: docker.io/rancher/rancher
+readinessProbe:
+  failureThreshold: 5
+  periodSeconds: 30
+  timeoutSeconds: 5
+replicas: 1
+resources: {}
+service:
+  annotations: {}
+  disableHTTP: false
+  type: ""
+startupProbe:
+  failureThreshold: 12
+  periodSeconds: 10
+  timeoutSeconds: 5
+systemDefaultRegistry: ""
+tls: ingress
+topologyKey: kubernetes.io/hostname
+useBundledSystemChart: false
+webhook:
+  debug: true
+  extraEnv:
+    - name: CATTLE_DEBUG
+      value: "true"
+    - name: IGNORE_TLS_HANDSHAKE_ERROR
+      value: "true"
+  image:
+    imagePullPolicy: Always
+    repository: localhost:5000/rancher-webhook
+    tag: latest
+  mcm:
+    enabled: true
+  nodeSelector: {}
+  port: 9443
+  priorityClassName: rancher-critical
+  tolerations: []
+  resources:
+    limits:
+      cpu: 500m
+      ephemeral-storage: 1Gi  # Set an upper limit
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      ephemeral-storage: 500Mi # Request a minimum amount
+      memory: 64Mi
+#  caCerts: "LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSUVIVENDQXdXZ0F3SUJBZ0lVVDNFYVlsajc2akJ3YzVWTGFENDZWU3RDOTNjd0RRWUpLb1pJaHZjTkFRRUwKQlFBd2daMHhDekFKQmdOVkJBWVRBa0pTTVJJd0VBWURWUVFJREFsVFlXOGdVR0YxYkc4eEVqQVFCZ05WQkFjTQpDVk5oYnlCUVlYVnNiekVOTUFzR0ExVUVDZ3dFVTNWelpURU5NQXNHQTFVRUN3d0VVM1Z6WlRFcU1DZ0dBMVVFCkF3d2hjbUZ1WTJobGNpMTNaV0pvYjI5ckxtTmhkSFJzWlMxemVYTjBaVzB1YzNaak1Sd3dHZ1lKS29aSWh2Y04KQVFrQkZnMXRZWEo1UUhOMWMyVXVZMjl0TUI0WERUSTFNRGd4TWpFMU16WXlOMW9YRFRJMk1EZ3hNakUxTXpZeQpOMW93Z1oweEN6QUpCZ05WQkFZVEFrSlNNUkl3RUFZRFZRUUlEQWxUWVc4Z1VHRjFiRzh4RWpBUUJnTlZCQWNNCkNWTmhieUJRWVhWc2J6RU5NQXNHQTFVRUNnd0VVM1Z6WlRFTk1Bc0dBMVVFQ3d3RVUzVnpaVEVxTUNnR0ExVUUKQXd3aGNtRnVZMmhsY2kxM1pXSm9iMjlyTG1OaGRIUnNaUzF6ZVhOMFpXMHVjM1pqTVJ3d0dnWUpLb1pJaHZjTgpBUWtCRmcxdFlYSjVRSE4xYzJVdVkyOXRNSUlCSWpBTkJna3Foa2lHOXcwQkFRRUZBQU9DQVE4QU1JSUJDZ0tDCkFRRUFvbjV3cGhhcEJEU0RyNkxmMnV0TEFiWk5UNytsSW94czNxL1NpT0IrSzNCaktnQmpjYmdmUkU5NGN4TGwKSjl2ZzVOMkVhMVBiZ0hSVVJLdnVGYVdaMFNmM2FlZmVYU1p3WVZIVUxpMk45ZzdrYXMraHFtck9NY0M5ZGx3SgpoVkljZlJlL05vZ25LRWVmU0FYY3lqenVTanBTNDB2R1hoWjNMd2RMWnFtd1NYd2cyZ24xUXJ5QWJqNVJrREd2CmZvNWNVcVBWNm0rbmk4eXZlVEZ0N0ptN2xTUWZiaWdVdjRKdG1HME9CSjVqSFJBMGhNQVl4VGlLVEFHZGlTQTQKSWpKZWwxMnNaTGVQMXNpekY2akx6dU1sdzNscERxWVYzc3pLdzE1eHFxOFIxbHhaYWZFV0lYR3JEVmYrVU1sVQprN2RpVlNaaHJzSUVtbWgvaXkwdHRjYUdvUUlEQVFBQm8xTXdVVEFkQmdOVkhRNEVGZ1FVRitwVHkyZmNrazM5CklGUmVoUStFQlljWlV1a3dId1lEVlIwakJCZ3dGb0FVRitwVHkyZmNrazM5SUZSZWhRK0VCWWNaVXVrd0R3WUQKVlIwVEFRSC9CQVV3QXdFQi96QU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUFtcnBkbHJ6aUo5aFN5NkhLUzRmSgpNUlV6NXRvUFJ3N25YVml6Z29YNDRqMnpZa2lQWEptUkxKTU14Q2U0aEY5WWs0NGh2azhxMDlBcGhTclc1NkhxCmg0N2xCRjFaaS81VVZVZEZwUk1Ua3Uzck1PcEhpSWZidWxiUy9mblE3Q0xrcmxmaUltaFhUd0M2dHdHMjZ5OUwKY3RSWUozcTV1aFB6U3BQMkdkU1RPQXdJYkVKOFRBOTg1aFQvSjE4aTRCUGpSTFNYWlhDeFVMQ2NZbERyVUJKTQpWVmkxUEtVYUZnUEJsWUZHcm54UFdmR2xXdHMrZXB2YU5SeEJjem5vRW5zSklHUHQ3V3YrajlxVUh4L2JkR1BkCnNVekVBdHBoYXFYdDRlNUxNM1FLS1VMVS9HbzdISGdXd0ljMlhyWnhtK3RLajhxSzIxdUF0NWRVekRmL1hlY2oKRlE9PQotLS0tLUVORCBDRVJUSUZJQ0FURS0tLS0tCg=="

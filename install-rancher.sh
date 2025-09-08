@@ -1,0 +1,66 @@
+sudo systemctl stop rke2-server
+sudo /usr/local/bin/rke2-uninstall.sh
+sudo systemctl stop k3s
+sudo /usr/local/bin/k3s-uninstall.sh
+
+sleep 10
+
+HOST=$(hostname)
+
+curl -sfL https://get.rke2.io | sudo INSTALL_RKE2_VERSION=v1.26.0+rke2r1 sh -
+
+sleep 2
+
+sudo systemctl enable rke2-server.service
+sudo systemctl start rke2-server.service
+
+sleep 10
+
+sudo ln -s /var/lib/rancher/rke2/bin/kubectl /usr/local/bin/kubectl
+export PATH=$PATH:/opt/rke2/bin
+
+mkdir -p .kube
+sudo cp /etc/rancher/rke2/rke2.yaml .kube/config
+sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config
+sudo chmod 600 /home/ubuntu/.kube/config
+export KUBECONFIG=/home/ubuntu/.kube/config
+kubectl get nodes
+
+
+kubectl apply -f https://github.com/cert-manager/cert-manager/releases/download/v1.6.1/cert-manager.crds.yaml
+
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager \
+  --create-namespace \
+  --version v1.6.1 \
+  --set crds.enabled=false
+
+sleep 60
+#helm repo rm rancher-alpha
+#helm repo add rancher-alpha https://releases.rancher.com/server-charts/alpha
+#helm repo update
+#helm upgrade --install rancher rancher-alpha/rancher \
+#  --devel \
+#  --namespace cattle-system \
+#  --set rancherImageTag=head \
+#  --set "extraEnv[0].name=CATTLE_SERVER_URL" \
+#  --set "extraEnv[1].name=CATTLE_AGENT_IMAGE" \
+#  --set hostname=ip-172-31-36-232.sa-east-1.compute.internal \
+#  --set bootstrapPassword=admin \
+#  --set agentTLSMode=system-store \
+#  --set replicas=1 --create-namespace \
+#  --set global.cattle.image.repository=docker.io/rancher/rancher \
+#  --set global.cattle.image.tag=v2.12-5814c45fd818a99b0c7a95406445bc85deb535e9-head \
+#  --set global.cattle.image.pullPolicy=Never \
+#  --set "extraEnv[0].value=ip-172-31-36-232.sa-east-1.compute.internal" \
+#  --set "extraEnv[1].value=rancher/rancher-agent:head" \
+#  --version=v2.12.0-alpha9
+#
+
+helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
+helm install rancher rancher-latest/rancher \
+  --namespace cattle-system \
+  --set hostname=${HOST}.sa-east-1.compute.internal \
+  --set replicas=1 \
+  --set bootstrapPassword=admin \
+  --version=2.12.0 --create-namespace 

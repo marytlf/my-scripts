@@ -285,6 +285,7 @@ def main():
         "replicasets",
         "services",
         "endpoints",
+        "ingress",
     ]
 
     for ns in namespaces:

@@ -3,7 +3,7 @@
 import os
 import re
 import sys
-from collections import defaultdict
+from collections import defaultdict, Counter
 from difflib import unified_diff
 
 def list_txt_files(root):
@@ -15,6 +15,130 @@ def list_txt_files(root):
                 rel_path = os.path.relpath(full_path, root)
                 txt_files.add(rel_path)
     return txt_files
+
+def show_text_diff(folder1, folder2, relative_path, log, max_lines=50):
+    """
+    Show a unified diff of two text files (relative_path inside folder1 and folder2).
+    Logs up to max_lines lines of diff.
+    """
+    path1 = os.path.join(folder1, relative_path)
+    path2 = os.path.join(folder2, relative_path)
+
+    if not os.path.isfile(path1) or not os.path.isfile(path2):
+        log(f"  One or both files missing: {relative_path}")
+        return
+
+    with open(path1, "r") as f1, open(path2, "r") as f2:
+        lines1 = f1.readlines()
+        lines2 = f2.readlines()
+
+    diff_lines = list(unified_diff(lines1, lines2, fromfile=f"{folder1}/{relative_path}", tofile=f"{folder2}/{relative_path}"))
+    if not diff_lines:
+        log("  No differences found in file content.")
+        return
+
+    log(f"  Showing up to {max_lines} lines of diff for {relative_path}:")
+    for line in diff_lines[:max_lines]:
+        log("    " + line.rstrip())
+    if len(diff_lines) > max_lines:
+        log(f"    ... (diff truncated, total {len(diff_lines)} lines)")
+
+def get_top_fatal_error_warning_messages(folder, top_n=3):
+    """
+    Scan all .txt files under folder, find lines with 'fatal', 'error', or 'warning' (case-insensitive),
+    count unique messages, and track which files they appear in.
+
+    Returns three lists:
+      - top_fatals: list of tuples (message, count, set_of_files)
+      - top_errors: list of tuples (message, count, set_of_files)
+      - top_warnings: list of tuples (message, count, set_of_files)
+    """
+    fatal_pattern = re.compile(r"fatal", re.IGNORECASE)
+    error_pattern = re.compile(r"error", re.IGNORECASE)
+    warning_pattern = re.compile(r"warning", re.IGNORECASE)
+
+    fatal_messages = defaultdict(lambda: {"count": 0, "files": set()})
+    error_messages = defaultdict(lambda: {"count": 0, "files": set()})
+    warning_messages = defaultdict(lambda: {"count": 0, "files": set()})
+
+    for dirpath, _, files in os.walk(folder):
+        for filename in files:
+            if not filename.endswith(".txt"):
+                continue
+            filepath = os.path.join(dirpath, filename)
+            try:
+                with open(filepath, "r", errors="ignore") as f:
+                    for line in f:
+                        line_strip = line.strip()
+                        if fatal_pattern.search(line_strip):
+                            fatal_messages[line_strip]["count"] += 1
+                            fatal_messages[line_strip]["files"].add(filename)
+                        elif error_pattern.search(line_strip):
+                            error_messages[line_strip]["count"] += 1
+                            error_messages[line_strip]["files"].add(filename)
+                        elif warning_pattern.search(line_strip):
+                            warning_messages[line_strip]["count"] += 1
+                            warning_messages[line_strip]["files"].add(filename)
+            except Exception:
+                # Ignore file read errors
+                pass
+
+    def top_n_messages(msg_dict):
+        sorted_msgs = sorted(msg_dict.items(), key=lambda x: x[1]["count"], reverse=True)[:top_n]
+        return [(msg, data["count"], data["files"]) for msg, data in sorted_msgs]
+
+    top_fatals = top_n_messages(fatal_messages)
+    top_errors = top_n_messages(error_messages)
+    top_warnings = top_n_messages(warning_messages)
+
+    return top_fatals, top_errors, top_warnings
+
+def get_top_errors_warnings(folder, top_n=3):
+    """
+    Scan all .txt files under folder, find lines with 'error' or 'warning' (case-insensitive),
+    count unique messages, and track which files they appear in.
+
+    Returns two lists:
+      - top_errors: list of tuples (message, count, set_of_files)
+      - top_warnings: list of tuples (message, count, set_of_files)
+    """
+    error_pattern = re.compile(r"error", re.IGNORECASE)
+    warning_pattern = re.compile(r"warning", re.IGNORECASE)
+
+    error_messages = defaultdict(lambda: {"count": 0, "files": set()})
+    warning_messages = defaultdict(lambda: {"count": 0, "files": set()})
+
+    for dirpath, _, files in os.walk(folder):
+        for filename in files:
+            if not filename.endswith(".txt"):
+                continue
+            filepath = os.path.join(dirpath, filename)
+            try:
+                with open(filepath, "r", errors="ignore") as f:
+                    for line in f:
+                        line_strip = line.strip()
+                        if error_pattern.search(line_strip):
+                            # Use the full line as message key or extract a shorter message if desired
+                            msg = line_strip
+                            error_messages[msg]["count"] += 1
+                            error_messages[msg]["files"].add(filename)
+                        elif warning_pattern.search(line_strip):
+                            msg = line_strip
+                            warning_messages[msg]["count"] += 1
+                            warning_messages[msg]["files"].add(filename)
+            except Exception as e:
+                # Optionally log or print error reading file
+                pass
+
+    # Sort by count descending and take top N
+    top_errors = sorted(error_messages.items(), key=lambda x: x[1]["count"], reverse=True)[:top_n]
+    top_warnings = sorted(warning_messages.items(), key=lambda x: x[1]["count"], reverse=True)[:top_n]
+
+    # Format output as list of tuples: (message, count, set_of_files)
+    top_errors_formatted = [(msg, data["count"], data["files"]) for msg, data in top_errors]
+    top_warnings_formatted = [(msg, data["count"], data["files"]) for msg, data in top_warnings]
+
+    return top_errors_formatted, top_warnings_formatted
 
 def count_resources(folder, resource_types):
     counts = {}
@@ -459,6 +583,61 @@ def read_helm_releases(folder):
             releases.add(parts[0])
     return releases
 
+def log_top_fatal_error_warning(folder):
+    log(f"Top 3 FATAL messages in {folder}:")
+    top_fatals, top_errors, top_warnings = get_top_fatal_error_warning_messages(folder, top_n=3)
+
+    if top_fatals:
+        for i, (msg, count, files) in enumerate(top_fatals, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No FATAL messages found.")
+
+    log("\nTop 3 ERROR messages:")
+    if top_errors:
+        for i, (msg, count, files) in enumerate(top_errors, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No ERROR messages found.")
+
+    log("\nTop 3 WARNING messages:")
+    if top_warnings:
+        for i, (msg, count, files) in enumerate(top_warnings, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No WARNING messages found.")
+
+    log("\n")
+    
+def log_top_errors_warnings(folder):
+    log("Top 3 ERROR messages:")
+    top_errors, top_warnings = get_top_errors_warnings(folder, top_n=3)
+
+    if top_errors:
+        for i, (msg, count, files) in enumerate(top_errors, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No ERROR messages found.")
+
+    log("\nTop 3 WARNING messages:")
+    if top_warnings:
+        for i, (msg, count, files) in enumerate(top_warnings, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No WARNING messages found.")
+
+    log("\n")
+
 def main(folder1, folder2, logfile_path):
     global log_file
     log_file = open(logfile_path, "w")
@@ -717,17 +896,23 @@ def main(folder1, folder2, logfile_path):
 
     log("\n")
 
+    # Compare kubectl top outputs
+    top_nodes_diff = compare_text_files(folder1, folder2, "kubectl_top/top_nodes.txt")
+    top_pods_diff = compare_text_files(folder1, folder2, "kubectl_top/top_pods_all_namespaces.txt")
     log("kubectl top nodes output difference:")
     if top_nodes_diff:
         log("  -> Differences found in 'kubectl top nodes' output.")
+        #show_text_diff(folder1, folder2, "kubectl_top/top_nodes.txt", log)
     else:
         log("  No differences in 'kubectl top nodes' output or file missing.")
     log("kubectl top pods output difference:")
     if top_pods_diff:
         log("  -> Differences found in 'kubectl top pods --all-namespaces' output.")
+        #show_text_diff(folder1, folder2, "kubectl_top/top_pods_all_namespaces.txt", log)
     else:
         log("  No differences in 'kubectl top pods --all-namespaces' output or file missing.")
     log("\n")
+
     # Compare cluster events count and optionally diff event files
     events_count1 = count_events(folder1)
     events_count2 = count_events(folder2)
@@ -736,6 +921,8 @@ def main(folder1, folder2, logfile_path):
     log(f"  Folder2: {events_count2}")
     if events_count1 != events_count2:
         log("  -> Event counts differ!")
+        # Show diff of event files if available
+        #show_text_diff(folder1, folder2, "events/cluster_events.txt", log)
     else:
         log("  Event counts are the same.")
     # Optionally diff event files if you want (not shown here for brevity)
@@ -755,7 +942,7 @@ def main(folder1, folder2, logfile_path):
             log(f"  No YAML differences found for {rtype}.")
         log("\n")
 
-    
+
     # 13. ERROR/FATAL counts
     err1, fat1 = count_errors_fatal(folder1)
     err2, fat2 = count_errors_fatal(folder2)
@@ -766,6 +953,9 @@ def main(folder1, folder2, logfile_path):
         log("  -> ERROR/FATAL counts differ!")
     else:
         log("  ERROR/FATAL counts are the same.")
+
+    log_top_fatal_error_warning(folder1)
+    log_top_fatal_error_warning(folder2)
 
     log_file.close()
     print(f"Comparison complete. Output saved to {logfile_path}")

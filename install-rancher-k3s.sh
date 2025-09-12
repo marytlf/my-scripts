@@ -3,6 +3,15 @@ sudo /usr/local/bin/rke2-uninstall.sh
 sudo systemctl stop k3s
 sudo /usr/local/bin/k3s-uninstall.sh
 
+# Disconnect from the vcluster (if you are still connected)
+vcluster disconnect
+
+# Delete the vcluster
+vcluster delete rancher-vcluster
+
+# Delete the k3d cluster
+k3d cluster delete my-host-cluster
+
 sleep 10
 
 HOST=$(hostname)
@@ -74,9 +83,9 @@ helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 helm install rancher rancher-latest/rancher \
   --namespace cattle-system \
   --set hostname=${HOST}.sa-east-1.compute.internal \
-  --set replicas=1 \
+  --set replicas=3 \
   --set bootstrapPassword=admin \
-  --version=2.12.0 --create-namespace 
+  --version=2.12.1 --create-namespace 
   
 source ~/.bashrc
 touch ~/.bash_alises

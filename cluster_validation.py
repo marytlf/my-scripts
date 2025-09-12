@@ -411,6 +411,7 @@ def compare_ingress_hosts(hosts1, hosts2):
         if added or removed:
             diffs[f] = {"added": added, "removed": removed}
     return diffs
+
 def read_helm_releases(folder):
     """
     Reads Helm releases from helm_releases/helm_list_all_namespaces.txt file.
@@ -433,7 +434,7 @@ def read_helm_releases(folder):
         if parts:
             releases.add(parts[0])
     return releases
-    
+
 def main(folder1, folder2, logfile_path):
     global log_file
     log_file = open(logfile_path, "w")
@@ -702,8 +703,11 @@ def main(folder1, folder2, logfile_path):
 
 
 if __name__ == "__main__":
-    import sys
-    if len(sys.argv) != 3:
-        print("Usage: python3 compare_folders.py <folder1> <folder2>")
+    if len(sys.argv) not in [3,4]:
+        print("Usage: python3 compare_folders.py <folder1> <folder2> [logfile]")
         sys.exit(1)
-    main(sys.argv[1], sys.argv[2])
+    folder1 = sys.argv[1]
+    folder2 = sys.argv[2]
+    logfile = sys.argv[3] if len(sys.argv) == 4 else "comparison_log.txt"
+    main(folder1, folder2, logfile)
+

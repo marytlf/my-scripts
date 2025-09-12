@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Go.mod Kubernetes Dependency Comparator</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+  }
+  textarea {
+    width: 100%;
+    height: 200px;
+    font-family: monospace;
+  }
+  select, button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 1rem;
+  }
+  table {
+    border-collapse: collapse;
+    margin-top: 20px;
+    width: 100%;
+  }
+  th, td {
+    border: 1px solid #ccc;
+    padding: 6px 10px;
+    text-align: left;
+  }
+  th {
+    background-color: #eee;
+  }
+  .diff {
+    background-color: #fdd;
+  }
+  .loading {
+    margin-top: 10px;
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<h1>Go.mod Kubernetes Dependency Comparator</h1>
+
+<label for="gomod-input">Paste your go.mod content here:</label><br />
+<textarea id="gomod-input" placeholder="Paste your go.mod content here..."></textarea>
+
+<br />
+
+<label for="k8s-version">Select Kubernetes version:</label><br />
+<select id="k8s-version">
+  <option value="release-1.32">release-1.32</option>
+  <option value="release-1.31">release-1.31</option>
+  <option value="release-1.30">release-1.30</option>
+  <option value="release-1.29">release-1.29</option>
+  <option value="release-1.28">release-1.28</option>
+  <option value="release-1.27">release-1.27</option>
+  <option value="release-1.26">release-1.26</option>
+  <option value="release-1.25">release-1.25</option>
+  <option value="release-1.24">release-1.24</option>
+  <option value="release-1.23">release-1.23</option>
+</select>
+
+<br />
+
+<button id="compare-btn">Compare</button>
+
+<div id="loading" class="loading" style="display:none;">Loading Kubernetes go.mod...</div>
+
+<div id="result"></div>
+
+<script>
+// Parse go.mod content to extract require and replace dependencies
+// Returns an object: { require: Map<module, version>, replace: Map<module, {oldVersion, newModule, newVersion}> }
+function parseGoMod(content) {
+  const require = new Map();
+  const replace = new Map();
+
+  // Remove comments and trim lines
+  const lines = content.split('\n').map(l => l.trim()).filter(l => l && !l.startsWith('//'));
+
+  // State machine to handle multiline blocks
+  let inRequireBlock = false;
+  let inReplaceBlock = false;
+
+  for (let line of lines) {
+    if (line.startsWith('require (')) {
+      inRequireBlock = true;
+      continue;
+    }
+    if (line.startsWith('replace (')) {
+      inReplaceBlock = true;
+      continue;
+    }
+    if (line === ')') {
+      inRequireBlock = false;
+      inReplaceBlock = false;
+      continue;
+    }
+
+    if (inRequireBlock) {
+      // Format: module version [// indirect]
+      const parts = line.split(/\s+/);
+      if (parts.length >= 2) {
+        require.set(parts[0], parts[1]);
+      }
+    } else if (inReplaceBlock) {
+      // Format: old [version] => new [version]
+      // Examples:
+      // k8s.io/api => k8s.io/api v0.21.0
+      // k8s.io/api v0.21.0 => k8s.io/api v0.22.0
+      const arrowIndex = line.indexOf('=>');
+      if (arrowIndex === -1) continue;
+      const left = line.substring(0, arrowIndex).trim();
+      const right = line.substring(arrowIndex + 2).trim();
+
+      // Parse left: module [version?]
+      const leftParts = left.split(/\s+/);
+      const oldModule = leftParts[0];
+      const oldVersion = leftParts.length > 1 ? leftParts[1] : null;
+
+      // Parse right: module [version?]
+      const rightParts = right.split(/\s+/);
+      const newModule = rightParts[0];
+      const newVersion = rightParts.length > 1 ? rightParts[1] : null;
+
+      replace.set(oldModule, { oldVersion, newModule, newVersion });
+    } else {
+      // Single line require or replace
+      if (line.startsWith('require ')) {
+        // e.g. require k8s.io/api v0.21.0
+        const parts = line.substring(8).trim().split(/\s+/);
+        if (parts.length >= 2) {
+          require.set(parts[0], parts[1]);
+        }
+      } else if (line.startsWith('replace ')) {
+        // e.g. replace k8s.io/api v0.21.0 => k8s.io/api v0.22.0
+        const rest = line.substring(8).trim();
+        const arrowIndex = rest.indexOf('=>');
+        if (arrowIndex === -1) continue;
+        const left = rest.substring(0, arrowIndex).trim();
+        const right = rest.substring(arrowIndex + 2).trim();
+
+        const leftParts = left.split(/\s+/);
+        const oldModule = leftParts[0];
+        const oldVersion = leftParts.length > 1 ? leftParts[1] : null;
+
+        const rightParts = right.split(/\s+/);
+        const newModule = rightParts[0];
+        const newVersion = rightParts.length > 1 ? rightParts[1] : null;
+
+        replace.set(oldModule, { oldVersion, newModule, newVersion });
+      }
+    }
+  }
+
+  return { require, replace };
+}
+
+// Fetch Kubernetes go.mod for a given release branch/tag
+async function fetchK8sGoMod(version) {
+  const url = `https://raw.githubusercontent.com/kubernetes/kubernetes/${version}/go.mod`;
+  const response = await fetch(url);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch Kubernetes go.mod for ${version}`);
+  }
+  return await response.text();
+}
+
+// Compare dependencies and return array of objects for table rows
+// Each object: { module, localVersion, k8sVersion, isDifferent, replacedWith }
+function compareDeps(localDeps, k8sDeps) {
+  // localDeps and k8sDeps are objects { require: Map, replace: Map }
+
+  // We'll compare all modules present in either local or k8s require
+  const allModules = new Set([...localDeps.require.keys(), ...k8sDeps.require.keys()]);
+
+  const rows = [];
+
+  for (let mod of allModules) {
+    const localVersion = localDeps.require.get(mod) || null;
+    const k8sVersion = k8sDeps.require.get(mod) || null;
+
+    // Check if local has a replace for this module
+    const replaceInfo = localDeps.replace.get(mod) || null;
+
+    // Determine displayed local version:
+    // If replaced, show replaced module and version
+    let displayedLocalVersion = localVersion;
+    let replacedWith = null;
+    if (replaceInfo) {
+      replacedWith = `${replaceInfo.newModule}${replaceInfo.newVersion ? ' ' + replaceInfo.newVersion : ''}`;
+      displayedLocalVersion = replaceInfo.newVersion || displayedLocalVersion;
+    }
+
+    // Determine if versions differ
+    // If replaced, compare replaced version with k8s version of replaced module if possible
+    // For simplicity, compare local displayed version with k8s version of the same module name
+    // (Note: This can be improved by resolving replaced module versions in k8sDeps)
+    let k8sVersionToCompare = k8sVersion;
+    if (replaceInfo && replaceInfo.newModule !== mod) {
+      // Try to get k8s version of replaced module
+      k8sVersionToCompare = k8sDeps.require.get(replaceInfo.newModule) || k8sVersion;
+    }
+
+    const isDifferent = displayedLocalVersion !== k8sVersionToCompare;
+
+    rows.push({
+      module: mod,
+      localVersion: displayedLocalVersion || '(none)',
+      k8sVersion: k8sVersionToCompare || '(none)',
+      isDifferent,
+      replacedWith,
+    });
+  }
+
+  return rows;
+}
+
+function createTable(rows) {
+  if (rows.length === 0) return '<p>No dependencies found.</p>';
+
+  let html = '<table><thead><tr><th>Module</th><th>Your Version</th><th>Kubernetes Version</th><th>Replaced With</th></tr></thead><tbody>';
+
+  for (const row of rows) {
+    // Only add diff class if versions differ AND neither side is "(none)"
+    const localDiff = row.isDifferent && row.localVersion !== '(none)';
+    const k8sDiff = row.isDifferent && row.k8sVersion !== '(none)';
+
+    html += `<tr>
+      <td>${row.module}</td>
+      <td class="${localDiff ? 'diff' : ''}">${row.localVersion}</td>
+      <td class="${k8sDiff ? 'diff' : ''}">${row.k8sVersion}</td>
+      <td>${row.replacedWith || ''}</td>
+    </tr>`;
+  }
+
+  html += '</tbody></table>';
+  return html;
+}
+
+document.getElementById('compare-btn').addEventListener('click', async () => {
+  const gomodContent = document.getElementById('gomod-input').value.trim();
+  const version = document.getElementById('k8s-version').value;
+  const loadingEl = document.getElementById('loading');
+  const resultEl = document.getElementById('result');
+
+  if (!gomodContent) {
+    alert('Please paste your go.mod content.');
+    return;
+  }
+
+  loadingEl.style.display = 'block';
+  resultEl.innerHTML = '';
+
+  try {
+    const k8sGoMod = await fetchK8sGoMod(version);
+
+    const localDeps = parseGoMod(gomodContent);
+    const k8sDeps = parseGoMod(k8sGoMod);
+
+    const rows = compareDeps(localDeps, k8sDeps);
+
+    resultEl.innerHTML = createTable(rows);
+  } catch (err) {
+    resultEl.innerHTML = `<p style="color:red;">Error: ${err.message}</p>`;
+  } finally {
+    loadingEl.style.display = 'none';
+  }
+});
+</script>
+
+</body>
+</html>

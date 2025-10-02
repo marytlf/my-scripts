@@ -105,7 +105,7 @@ create_rke2_config() {
   cat > "$rke2_cfg" <<EOF
 # /etc/rancher/rke2/config.yaml
 api-server-args:
-  - enable-aggregator-routing=true
+  - enable-aggregator-routing=false
 #egress-selector-mode: disabled
 EOF
   sudo mkdir -p /etc/rancher/rke2/

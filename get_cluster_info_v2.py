@@ -376,9 +376,9 @@ def main():
                 save_describe(res, name, ns, base_dir)
 
     # Handle CRDs cluster-wide (they are cluster scoped)
-    #crds = get_resource_names("customresourcedefinitions")
-    #for crd in crds:
-    #    save_describe("customresourcedefinitions", crd, None, base_dir)
+    crds = get_resource_names("customresourcedefinitions")
+    for crd in crds:
+        save_describe("customresourcedefinitions", crd, None, base_dir)
 
     # Save OS info
     save_os_info(base_dir)

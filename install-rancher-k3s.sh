@@ -88,7 +88,7 @@ helm install rancher rancher-latest/rancher \
   --version=2.12.1 --create-namespace 
   
 source ~/.bashrc
-touch ~/.bash_alises
+touch ~/.bash_aliases
 if [ -z "$KUBECONFIG" ]; then
     # If it's empty, set the default path
     export KUBECONFIG=/home/$USER/.kube/config

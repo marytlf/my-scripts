@@ -3,7 +3,7 @@
 import os
 import re
 import sys
-from collections import defaultdict
+from collections import defaultdict, Counter
 from difflib import unified_diff
 
 def list_txt_files(root):
@@ -15,6 +15,379 @@ def list_txt_files(root):
                 rel_path = os.path.relpath(full_path, root)
                 txt_files.add(rel_path)
     return txt_files
+
+def normalize_lines(lines):
+    """
+    Normalize lines by removing ignorable fields like UID, ResourceVersion, CreationTimestamp, etc.
+    This helps in diffing by ignoring ephemeral or timestamp-based changes.
+    """
+    normalized = []
+    for line in lines:
+        line_strip = line.strip()
+        # Skip UID lines
+        if re.match(r'^\s*UID:\s*[a-f0-9-]{36}', line_strip):
+            continue
+        # Skip Resource Version
+        if re.match(r'^\s*resourceVersion:\s*\d+', line_strip):
+            continue
+        # Skip Creation Timestamp
+        if re.match(r'^\s*Creation Timestamp:\s*.+', line_strip):
+            continue
+        # Skip Generation
+        if re.match(r'^\s*Generation:\s*\d+', line_strip):
+            continue
+        # Skip Last Transition Time in conditions/status
+        if re.search(r'Last Transition Time:\s*.+', line_strip):
+            continue
+        # Skip First/Last Timestamp in events
+        if re.search(r'(First|Last) Timestamp:\s*.+', line_strip):
+            continue
+        # Add more patterns as needed, e.g., for other timestamps
+        # Skip lines with full timestamps if they are standalone
+        if re.match(r'^\s*\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.*Z?\s*$', line_strip):
+            continue
+        normalized.append(line)
+    return normalized
+
+def extract_log_message(line):
+    """
+    Extract the message from a log line by removing common timestamp prefixes.
+    This normalizes log entries for comparison, focusing on the error/warning content.
+    """
+    line = line.strip()
+    # Common timestamp patterns (ISO, with/without brackets, etc.)
+    patterns = [
+        r'^\$?(\d{4}-\d{2}-\d{2}[T\s]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:\d{2})?)?\$?[\s:]*',
+        r'^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}(\.\d+)?[\s]*',  # e.g., "2023-10-10 14:30:45.123"
+        r'^[\w]{3} \d{1,2} \d{2}:\d{2}:\d{2}(\.\d+)?[\s]*',   # e.g., "Oct 10 14:30:45.123"
+        r'^\d{2}:\d{2}:\d{2}(\.\d+)?[\s]*',                    # Just time
+    ]
+    for pat in patterns:
+        m = re.match(pat, line, re.IGNORECASE)
+        if m:
+            return line[m.end():].strip()
+    return line  # No timestamp found, return as-is
+
+def show_text_diff(folder1, folder2, relative_path, log, max_lines=50):
+    """
+    Show a unified diff of two text files (relative_path inside folder1 and folder2).
+    Logs up to max_lines lines of diff. Uses normalization to ignore timestamps/UIDs/etc.
+    """
+    path1 = os.path.join(folder1, relative_path)
+    path2 = os.path.join(folder2, relative_path)
+
+    if not os.path.isfile(path1) or not os.path.isfile(path2):
+        log(f"  One or both files missing: {relative_path}")
+        return
+
+    with open(path1, "r") as f1, open(path2, "r") as f2:
+        lines1 = normalize_lines(f1.readlines())
+        lines2 = normalize_lines(f2.readlines())
+
+    diff_lines = list(unified_diff(lines1, lines2, fromfile=f"{folder1}/{relative_path}", tofile=f"{folder2}/{relative_path}"))
+    if not diff_lines:
+        log("  No differences found in file content (after normalization).")
+        return
+
+    log(f"  Showing up to {max_lines} lines of diff for {relative_path}:")
+    for line in diff_lines[:max_lines]:
+        log("    " + line.rstrip())
+    if len(diff_lines) > max_lines:
+        log(f"    ... (diff truncated, total {len(diff_lines)} lines)")
+
+def validate_events_in_describes(folder, log=None, resource_types=None):
+    """
+    Validate events and status from Kubernetes describe outputs in the 'describes/' directory.
+    Checks for errors, warnings, and unhealthy states in Events sections and resource status.
+
+    Args:
+        folder (str): Path to the folder containing 'describes/' subdir.
+        log (callable, optional): Logging function to output details.
+        resource_types (list, optional): List of resource types to scan (e.g., ['pods', 'deployments']).
+                                         Defaults to common types if None.
+
+    Returns:
+        dict: {
+            'is_healthy': bool,  # True if no issues found
+            'issue_count': int,  # Total problematic events/states
+            'issues_by_resource': dict,  # {resource_file: [list of issue strings]}
+            'top_issues': list  # Top 5 issue reasons/messages (tuples: (reason, count))
+        }
+    """
+    if resource_types is None:
+        resource_types = [
+            "pods", "deployments", "statefulsets", "replicasets", "services",
+            "configmaps", "secrets", "ingresses", "nodes"
+        ]
+
+    issues_by_resource = {}
+    issue_reasons = Counter()  # For top issues
+    total_issues = 0
+
+    error_patterns = [
+        re.compile(r"(?i)(error|failed|denied|backoff|crashloop|evicted|oomkilled)", re.IGNORECASE),
+        re.compile(r"(?i)Reason:\s*(Failed|Error|FailedScheduling|FailedMount)", re.IGNORECASE)
+    ]
+    warning_patterns = [
+        re.compile(r"(?i)warning", re.IGNORECASE),
+        re.compile(r"(?i)Reason:\s*(Warning|Unschedulable)", re.IGNORECASE)
+    ]
+    unhealthy_patterns = {
+        'pods': [
+            re.compile(r"(?i)Phase:\s*(Pending|Failed|Unknown)"),
+            re.compile(r"(?i)Ready:\s*False"),
+            re.compile(r"(?i)Initialized:\s*False"),
+            re.compile(r"(?i)ContainersReady:\s*False")
+        ],
+        'deployments': [
+            re.compile(r"(?i)Available:\s*False"),
+            re.compile(r"(?i)Progressing:\s*False"),
+            re.compile(r"(?i)Replicas:\s*(\d+)\s+/\s+(\d+)\s+(updated|available|desired).*(\1 < \2)")  # Mismatched replicas
+        ],
+        'services': [
+            re.compile(r"(?i)Endpoints:\s*<none>"),
+            re.compile(r"(?i)Selector:\s*<unset>")
+        ]
+        # Add more resource-specific patterns as needed
+    }
+
+    for rtype in resource_types:
+        rdir = os.path.join(folder, "describes", rtype)
+        if not os.path.isdir(rdir):
+            continue
+
+        for filename in os.listdir(rdir):
+            if not filename.endswith(".txt"):
+                continue
+            filepath = os.path.join(rdir, filename)
+            try:
+                with open(filepath, "r") as f:
+                    content = f.read()
+                    lines = f.readlines()  # For line-by-line processing
+            except Exception as e:
+                if log:
+                    log(f"Failed to read {filepath}: {e}")
+                continue
+
+            resource_issues = []
+            in_events_section = False
+            normalized_lines = normalize_lines(lines)
+
+            # Check general status (unhealthy states)
+            for pattern in unhealthy_patterns.get(rtype, []):
+                for line in normalized_lines:
+                    if pattern.search(line):
+                        issue_msg = f"Unhealthy state in {rtype}/{filename}: {line.strip()}"
+                        resource_issues.append(issue_msg)
+                        issue_reasons[line.strip().lower()] += 1
+                        total_issues += 1
+                        break  # One per pattern to avoid duplicates
+
+            # Extract and check Events section
+            for i, line in enumerate(lines):
+                line_strip = line.strip()
+                if re.match(r"^Events:\s*$", line_strip):
+                    in_events_section = True
+                    continue
+                if in_events_section:
+                    if not line.startswith(" ") and not line.startswith("\t") and line_strip:
+                        in_events_section = False  # End of section
+                        continue
+
+                    if in_events_section and line_strip:
+                        # Normalize message
+                        msg = extract_log_message(line)
+                        if not msg:
+                            continue
+
+                        # Check for errors
+                        for pat in error_patterns:
+                            if pat.search(msg):
+                                issue_msg = f"Error event in {rtype}/{filename}: {msg}"
+                                resource_issues.append(issue_msg)
+                                issue_reasons[msg.lower()] += 1
+                                total_issues += 1
+                                break
+
+                        # Check for warnings
+                        for pat in warning_patterns:
+                            if pat.search(msg):
+                                issue_msg = f"Warning event in {rtype}/{filename}: {msg}"
+                                resource_issues.append(issue_msg)
+                                issue_reasons[msg.lower()] += 1
+                                total_issues += 1
+                                break
+
+            if resource_issues:
+                issues_by_resource[filename] = resource_issues
+
+            # Log details if provided
+            if log and resource_issues:
+                log(f"Issues in {rtype}/{filename} ({len(resource_issues)}):")
+                for issue in resource_issues[:5]:  # Limit to top 5 per file
+                    log(f"  - {issue}")
+                if len(resource_issues) > 5:
+                    log(f"  ... (more issues truncated)")
+
+    is_healthy = total_issues == 0
+    top_issues = issue_reasons.most_common(5)
+
+    if log:
+        log(f"Event validation for {folder}: Healthy={is_healthy}, Total Issues={total_issues}")
+        if top_issues:
+            log("Top 5 issue reasons:")
+            for reason, count in top_issues:
+                log(f"  - {reason}: {count} occurrences")
+
+    return {
+        'is_healthy': is_healthy,
+        'issue_count': total_issues,
+        'issues_by_resource': issues_by_resource,
+        'top_issues': top_issues
+    }
+
+def get_top_fatal_error_warning_messages(folder, top_n=3):
+    """
+    Scan all .txt files under folder, find lines with 'fatal', 'error', or 'warning' (case-insensitive),
+    count unique messages (normalized by removing timestamps), and track which files they appear in.
+
+    Returns three lists:
+      - top_fatals: list of tuples (message, count, set_of_files)
+      - top_errors: list of tuples (message, count, set_of_files)
+      - top_warnings: list of tuples (message, count, set_of_files)
+    """
+    fatal_pattern = re.compile(r"fatal", re.IGNORECASE)
+    error_pattern = re.compile(r"error", re.IGNORECASE)
+    warning_pattern = re.compile(r"warning", re.IGNORECASE)
+
+    fatal_messages = defaultdict(lambda: {"count": 0, "files": set()})
+    error_messages = defaultdict(lambda: {"count": 0, "files": set()})
+    warning_messages = defaultdict(lambda: {"count": 0, "files": set()})
+
+    for dirpath, _, files in os.walk(folder):
+        for filename in files:
+            if not filename.endswith(".txt"):
+                continue
+            filepath = os.path.join(dirpath, filename)
+            try:
+                with open(filepath, "r", errors="ignore") as f:
+                    for line in f:
+                        line_strip = line.strip()
+                        msg = extract_log_message(line)
+                        if fatal_pattern.search(line_strip):
+                            fatal_messages[msg]["count"] += 1
+                            fatal_messages[msg]["files"].add(filename)
+                        elif error_pattern.search(line_strip):
+                            error_messages[msg]["count"] += 1
+                            error_messages[msg]["files"].add(filename)
+                        elif warning_pattern.search(line_strip):
+                            warning_messages[msg]["count"] += 1
+                            warning_messages[msg]["files"].add(filename)
+            except Exception:
+                # Ignore file read errors
+                pass
+
+    def top_n_messages(msg_dict):
+        sorted_msgs = sorted(msg_dict.items(), key=lambda x: x[1]["count"], reverse=True)[:top_n]
+        return [(msg, data["count"], data["files"]) for msg, data in sorted_msgs]
+
+    top_fatals = top_n_messages(fatal_messages)
+    top_errors = top_n_messages(error_messages)
+    top_warnings = top_n_messages(warning_messages)
+
+    return top_fatals, top_errors, top_warnings
+
+def get_top_errors_warnings(folder, top_n=3):
+    """
+    Scan all .txt files under folder, find lines with 'error' or 'warning' (case-insensitive),
+    count unique messages (normalized), and track which files they appear in.
+
+    Returns two lists:
+      - top_errors: list of tuples (message, count, set_of_files)
+      - top_warnings: list of tuples (message, count, set_of_files)
+    """
+    error_pattern = re.compile(r"error", re.IGNORECASE)
+    warning_pattern = re.compile(r"warning", re.IGNORECASE)
+
+    error_messages = defaultdict(lambda: {"count": 0, "files": set()})
+    warning_messages = defaultdict(lambda: {"count": 0, "files": set()})
+
+    for dirpath, _, files in os.walk(folder):
+        for filename in files:
+            if not filename.endswith(".txt"):
+                continue
+            filepath = os.path.join(dirpath, filename)
+            try:
+                with open(filepath, "r", errors="ignore") as f:
+                    for line in f:
+                        line_strip = line.strip()
+                        msg = extract_log_message(line)
+                        if error_pattern.search(line_strip):
+                            error_messages[msg]["count"] += 1
+                            error_messages[msg]["files"].add(filename)
+                        elif warning_pattern.search(line_strip):
+                            warning_messages[msg]["count"] += 1
+                            warning_messages[msg]["files"].add(filename)
+            except Exception as e:
+                # Optionally log or print error reading file
+                pass
+
+    # Sort by count descending and take top N
+    top_errors = sorted(error_messages.items(), key=lambda x: x[1]["count"], reverse=True)[:top_n]
+    top_warnings = sorted(warning_messages.items(), key=lambda x: x[1]["count"], reverse=True)[:top_n]
+
+    # Format output as list of tuples: (message, count, set_of_files)
+    top_errors_formatted = [(msg, data["count"], data["files"]) for msg, data in top_errors]
+    top_warnings_formatted = [(msg, data["count"], data["files"]) for msg, data in top_warnings]
+
+    return top_errors_formatted, top_warnings_formatted
+
+def get_unique_error_messages(folder):
+    """
+    Get a set of unique ERROR messages (normalized by removing timestamps) from all .txt files.
+    Used for comparing differences between folders.
+    """
+    error_pattern = re.compile(r"error", re.IGNORECASE)
+    msgs = set()
+    for dirpath, _, files in os.walk(folder):
+        for filename in files:
+            if not filename.endswith(".txt"):
+                continue
+            filepath = os.path.join(dirpath, filename)
+            try:
+                with open(filepath, "r", errors="ignore") as f:
+                    for line in f:
+                        line_strip = line.strip()
+                        if error_pattern.search(line_strip):
+                            msg = extract_log_message(line)
+                            if msg:  # Avoid empty
+                                msgs.add(msg)
+            except Exception:
+                pass
+    return msgs
+
+def get_unique_warning_messages(folder):
+    """
+    Similar to get_unique_error_messages but for WARNING messages.
+    """
+    warning_pattern = re.compile(r"warning", re.IGNORECASE)
+    msgs = set()
+    for dirpath, _, files in os.walk(folder):
+        for filename in files:
+            if not filename.endswith(".txt"):
+                continue
+            filepath = os.path.join(dirpath, filename)
+            try:
+                with open(filepath, "r", errors="ignore") as f:
+                    for line in f:
+                        line_strip = line.strip()
+                        if warning_pattern.search(line_strip):
+                            msg = extract_log_message(line)
+                            if msg:
+                                msgs.add(msg)
+            except Exception:
+                pass
+    return msgs
 
 def count_resources(folder, resource_types):
     counts = {}
@@ -46,7 +419,7 @@ def count_pods_by_phase(folder):
                 phase = m.group(1) if m else "Unknown"
                 phases[phase] += 1
         except Exception as e:
-            log(f"Failed to read pod file {filepath}: {e}")
+            print(f"Failed to read pod file {filepath}: {e}")  # Use print since log may not be available
     return phases
 
 def parse_env_vars_from_deployment_file(filepath):
@@ -57,7 +430,7 @@ def parse_env_vars_from_deployment_file(filepath):
         with open(filepath, "r") as f:
             lines = f.readlines()
     except Exception as e:
-        log(f"Failed to read {filepath}: {e}")
+        print(f"Failed to read {filepath}: {e}")  # Use print
         return env_vars
 
     in_env_section = False
@@ -117,7 +490,7 @@ def extract_container_images_from_deployment(filepath):
         with open(filepath, "r") as f:
             lines = f.readlines()
     except Exception as e:
-        log(f"Failed to read {filepath}: {e}")
+        print(f"Failed to read {filepath}: {e}")
         return images
 
     for line in lines:
@@ -157,7 +530,7 @@ def extract_labels_from_deployment(filepath):
         with open(filepath, "r") as f:
             lines = f.readlines()
     except Exception as e:
-        log(f"Failed to read {filepath}: {e}")
+        print(f"Failed to read {filepath}: {e}")
         return labels
 
     for line in lines:
@@ -219,9 +592,10 @@ def get_configmap_keys(folder):
                         if m:
                             keys.add(m.group(1).strip())
         except Exception as e:
-            log(f"Failed to read configmap file {filepath}: {e}")
+            print(f"Failed to read configmap file {filepath}: {e}")
         keys_all[f] = keys
     return keys_all
+
 
 def count_events(folder):
     events_dir = os.path.join(folder, "events")
@@ -412,6 +786,30 @@ def compare_ingress_hosts(hosts1, hosts2):
             diffs[f] = {"added": added, "removed": removed}
     return diffs
 
+def count_files_in_dir(folder, subdir):
+    path = os.path.join(folder, subdir)
+    if not os.path.isdir(path):
+        return 0
+    return len([f for f in os.listdir(path) if f.endswith(".txt")])
+def read_text_file(folder, relative_path):
+    path = os.path.join(folder, relative_path)
+    if not os.path.isfile(path):
+        return None
+    try:
+        with open(path, "r") as f:
+            return f.read()
+    except Exception as e:
+        log(f"Failed to read {path}: {e}")
+        return None
+def compare_text_files(folder1, folder2, relative_path):
+    content1 = read_text_file(folder1, relative_path)
+    content2 = read_text_file(folder2, relative_path)
+    if content1 is None and content2 is None:
+        return None  # both missing
+    if content1 != content2:
+        return True  # differ
+    return False  # same
+
 def read_helm_releases(folder):
     """
     Reads Helm releases from helm_releases/helm_list_all_namespaces.txt file.
@@ -434,6 +832,61 @@ def read_helm_releases(folder):
         if parts:
             releases.add(parts[0])
     return releases
+
+def log_top_fatal_error_warning(folder):
+    log(f"Top 3 FATAL messages in {folder}:")
+    top_fatals, top_errors, top_warnings = get_top_fatal_error_warning_messages(folder, top_n=3)
+
+    if top_fatals:
+        for i, (msg, count, files) in enumerate(top_fatals, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No FATAL messages found.")
+
+    log("\nTop 3 ERROR messages:")
+    if top_errors:
+        for i, (msg, count, files) in enumerate(top_errors, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No ERROR messages found.")
+
+    log("\nTop 3 WARNING messages:")
+    if top_warnings:
+        for i, (msg, count, files) in enumerate(top_warnings, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No WARNING messages found.")
+
+    log("\n")
+    
+def log_top_errors_warnings(folder):
+    log("Top 3 ERROR messages:")
+    top_errors, top_warnings = get_top_errors_warnings(folder, top_n=3)
+
+    if top_errors:
+        for i, (msg, count, files) in enumerate(top_errors, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No ERROR messages found.")
+
+    log("\nTop 3 WARNING messages:")
+    if top_warnings:
+        for i, (msg, count, files) in enumerate(top_warnings, 1):
+            log(f"  {i}. Occurrences: {count}")
+            log(f"     Message: {msg}")
+            log(f"     Files: {', '.join(sorted(files))}")
+    else:
+        log("  No WARNING messages found.")
+
+    log("\n")
 
 def main(folder1, folder2, logfile_path):
     global log_file
@@ -470,7 +923,13 @@ def main(folder1, folder2, logfile_path):
     log("\n")
 
     # 2. Resource counts
-    resource_types = ["pods", "deployments", "statefulsets", "replicasets", "services", "configmaps", "secrets", "ingress"]
+    resource_types = [
+        "pods", "deployments", "statefulsets", "replicasets", "services",
+        "configmaps", "secrets", "ingresses", "nodes", "networkpolicies",
+        "persistentvolumes", "persistentvolumeclaims", "roles", "rolebindings",
+        "clusterroles", "clusterrolebindings", "ingressclasses"
+    ]
+
     counts1 = count_resources(folder1, resource_types)
     counts2 = count_resources(folder2, resource_types)
     log("Resource counts:")
@@ -581,10 +1040,10 @@ def main(folder1, folder2, logfile_path):
     log("\n")
 
     # 9. Kubernetes and Helm versions
-    k8s_ver1 = read_version_file(folder1, "k8s_version.txt")
-    k8s_ver2 = read_version_file(folder2, "k8s_version.txt")
-    helm_ver1 = read_version_file(folder1, "helm_version.txt")
-    helm_ver2 = read_version_file(folder2, "helm_version.txt")
+    k8s_ver1 = read_version_file(folder1, "versions/kubectl_version.txt")
+    k8s_ver2 = read_version_file(folder2, "versions/kubectl_version.txt")
+    helm_ver1 = read_version_file(folder1, "versions/helm_version.txt")
+    helm_ver2 = read_version_file(folder2, "versions/helm_version.txt")
 
     log("Kubernetes version:")
     log(f"  Folder1: {k8s_ver1 or 'N/A'}")
@@ -687,6 +1146,64 @@ def main(folder1, folder2, logfile_path):
 
     log("\n")
 
+    # Compare kubectl top outputs
+    top_nodes_diff = compare_text_files(folder1, folder2, "kubectl_top/top_nodes.txt")
+    top_pods_diff = compare_text_files(folder1, folder2, "kubectl_top/top_pods_all_namespaces.txt")
+    log("kubectl top nodes output difference:")
+    if top_nodes_diff:
+        log("  -> Differences found in 'kubectl top nodes' output.")
+        #show_text_diff(folder1, folder2, "kubectl_top/top_nodes.txt", log)
+    else:
+        log("  No differences in 'kubectl top nodes' output or file missing.")
+    log("kubectl top pods output difference:")
+    if top_pods_diff:
+        log("  -> Differences found in 'kubectl top pods --all-namespaces' output.")
+        #show_text_diff(folder1, folder2, "kubectl_top/top_pods_all_namespaces.txt", log)
+    else:
+        log("  No differences in 'kubectl top pods --all-namespaces' output or file missing.")
+    log("\n")
+
+    # Compare cluster events count and optionally diff event files
+    events_count1 = count_events(folder1)
+    events_count2 = count_events(folder2)
+    log(f"Cluster events count:")
+    log(f"  Folder1: {events_count1}")
+    log(f"  Folder2: {events_count2}")
+    if events_count1 != events_count2:
+        log("  -> Event counts differ!")
+        # Show diff of event files if available
+        #show_text_diff(folder1, folder2, "events/cluster_events.txt", log)
+    else:
+        log("  Event counts are the same.")
+    # Optionally diff event files if you want (not shown here for brevity)
+    log("\n")
+
+    log("Event Health Validation")
+    health1 = validate_events_in_describes(folder1, log=log)
+    health2 = validate_events_in_describes(folder2, log=log)
+    log(f"Folder1 Health: {health1['is_healthy']} (issues: {health1['issue_count']})")
+    log(f"Folder2 Health: {health2['is_healthy']} (issues: {health2['issue_count']})")
+    if health1['issue_count'] != health2['issue_count']:
+        log("  -> Health issue counts differ between folders!")
+    if not health1['is_healthy'] or not health2['is_healthy']:
+        log("  -> At least one folder has unhealthy events/states.")
+    log("\n")
+
+    # You can add more detailed diffs for network policies, storage, RBAC, ingress classes, etc.
+    # For example, diff_resource_yamls for these resource types:
+    for rtype in ["networkpolicies", "persistentvolumes", "persistentvolumeclaims", "roles", "rolebindings", "clusterroles", "clusterrolebindings", "ingressclasses"]:
+        diffs = diff_resource_yamls(folder1, folder2, rtype)
+        log(f"Resource YAML differences for {rtype}:")
+        if diffs:
+            for fname, diff_lines in diffs.items():
+                log(f"  Differences in {fname}:")
+                for line in diff_lines:
+                    log("    " + line.rstrip())
+        else:
+            log(f"  No YAML differences found for {rtype}.")
+        log("\n")
+
+
     # 13. ERROR/FATAL counts
     err1, fat1 = count_errors_fatal(folder1)
     err2, fat2 = count_errors_fatal(folder2)
@@ -697,6 +1214,9 @@ def main(folder1, folder2, logfile_path):
         log("  -> ERROR/FATAL counts differ!")
     else:
         log("  ERROR/FATAL counts are the same.")
+
+    log_top_fatal_error_warning(folder1)
+    log_top_fatal_error_warning(folder2)
 
     log_file.close()
     print(f"Comparison complete. Output saved to {logfile_path}")

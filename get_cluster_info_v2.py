@@ -55,6 +55,23 @@ def get_pods(namespace):
         return output.split()
     return []
 
+def save_pods_wide(base_dir, namespaces):
+    """
+    Save 'kubectl get pods -o wide' output for each namespace.
+    """
+    pods_wide_dir = os.path.join(base_dir, "pods_wide")
+    os.makedirs(pods_wide_dir, exist_ok=True)
+
+    for ns in namespaces:
+        print(f"Gathering 'kubectl get pods -o wide' for namespace {ns}...")
+        cmd = f"kubectl get pods -n {ns} -o wide"
+        output = run_cmd(cmd)
+        if output:
+            filename = f"{ns}_pods_wide.txt"
+            filepath = os.path.join(pods_wide_dir, filename)
+            with open(filepath, "w") as f:
+                f.write(output)
+
 def save_kubectl_top(base_dir):
     top_dir = os.path.join(base_dir, "kubectl_top")
     os.makedirs(top_dir, exist_ok=True)
@@ -85,11 +102,18 @@ def save_cluster_events(base_dir):
     events_dir = os.path.join(base_dir, "events")
     os.makedirs(events_dir, exist_ok=True)
 
-    print("Gathering cluster events (last 1000)...")
-    events = run_cmd("kubectl get events --all-namespaces --sort-by='.metadata.creationTimestamp' -o wide")
+    print("Gathering cluster events from all namespaces (last 1000 most recent)...")
+    # Use --sort-by='.lastTimestamp' to sort by last update time (ascending: oldest first)
+    # Then tail -1000 to get the most recent 1000 events (approximate, includes header if present)
+    # This covers all namespaces with --all-namespaces and should capture recent cluster-wide activity
+    # Note: Kubernetes events are namespaced but --all-namespaces aggregates them; node-level events may appear under relevant namespaces like kube-system
+    events_cmd = "kubectl get events --all-namespaces --sort-by='.lastTimestamp' -o wide | tail -1000"
+    events = run_cmd(events_cmd)
     if events:
         with open(os.path.join(events_dir, "cluster_events.txt"), "w") as f:
             f.write(events)
+    else:
+        print("No events found or command failed.")
 
 def save_network_policies(base_dir, namespaces):
     np_dir = os.path.join(base_dir, "network_policies")
@@ -241,6 +265,14 @@ def save_os_info(base_dir):
         with open(net_file, "w") as f:
             f.write(net_info)
 
+    # Kernel logs (dmesg)
+    dmesg_file = os.path.join(os_dir, "kernel_dmesg.txt")
+    print("Gathering kernel logs (dmesg)...")
+    dmesg_info = run_cmd("dmesg -T")  # Human-readable timestamps
+    if dmesg_info:
+        with open(dmesg_file, "w") as f:
+            f.write(dmesg_info)
+
 def get_network_drops():
     # Parse /proc/net/dev for dropped packets per interface
     try:
@@ -307,9 +339,10 @@ def save_k8s_system_logs(base_dir):
         "/var/log/kube-apiserver.log",
         "/var/log/kube-controller-manager.log",
         "/var/log/kube-scheduler.log",
+        "/var/log/messages",  # Added /var/log/messages
     ]
 
-    print("Checking common Kubernetes log files...")
+    print("Checking common Kubernetes and system log files...")
     for filepath in common_log_files:
         if os.path.isfile(filepath):
             dest_file = os.path.join(syslog_dir, os.path.basename(filepath))
@@ -344,6 +377,9 @@ def main():
     if not namespaces:
         print("No namespaces found or error fetching namespaces.")
         return
+
+    # Save pods -o wide for all namespaces
+    save_pods_wide(base_dir, namespaces)
 
     # Get logs for all pods in all namespaces
     for ns in namespaces:
@@ -380,13 +416,13 @@ def main():
     for crd in crds:
         save_describe("customresourcedefinitions", crd, None, base_dir)
 
-    # Save OS info
+    # Save OS info (now includes dmesg)
     save_os_info(base_dir)
 
     # Save nodes describe
     save_nodes_describe(base_dir)
 
-    # Save Kubernetes system logs
+    # Save Kubernetes system logs (now includes /var/log/messages)
     save_k8s_system_logs(base_dir)
 
     # Save Helm releases list
@@ -398,7 +434,7 @@ def main():
     # Save Kubernetes versions
     save_k8s_versions(base_dir)
     
-    # Save cluster events
+    # Save cluster events (updated for better recency)
     save_cluster_events(base_dir)
     
     # Save network policies

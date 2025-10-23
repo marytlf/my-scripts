@@ -26,7 +26,7 @@ install_cert_manager="$8"
 tls_type="$9"
 n_replicas="${10}"
 clean_env="${11}"
-installation_cert="${12}"
+generate_cert="${12}"
 
 env_install_cmd=""
 chart_install_path="$(pwd)/build/chart/rancher"
@@ -275,6 +275,23 @@ install_k3d(){
 
 }
 
+install_vcluster_version(){
+  curl -s -L "https://github.com/loft-sh/vcluster/releases/download/v0.26.0/vcluster-linux-amd64" | sudo tee /usr/local/bin/vcluster >/dev/null && sudo chmod +x /usr/local/bin/vcluster
+
+  install_helm
+}
+
+install_vcluster(){
+  install_vcluster_version
+  VCLUSTER_NAME="rancher-vcluster"
+  # --- Step 1: Clean up previous deployments (Idempotent) ---
+  echo "--- Step 1: Cleaning up any previous deployments ---"
+  vcluster disconnect > /dev/null 2>&1 || true
+  vcluster delete "$VCLUSTER_NAME" > /dev/null 2>&1 || true
+
+  vcluster create "$VCLUSTER_NAME" --chart-version v0.26.1 --expose=true 
+}
+
 validate_rancher_channel(){
     case "$rancher_helm_channel" in
         stable)
@@ -344,6 +361,21 @@ install_rancher(){
           # Add your k3d setup commands here
           install_k3d
           ;;
+        vcluster)
+          echo "Setting up vcluster cluster version $k8s_version..."
+          install_rke2 # This sets up the host cluster
+          
+          # --- Add Robust Host Cluster Readiness Check Here ---
+          echo "Waiting for host cluster (RKE2) to be ready (up to 5 minutes)..."
+          # 1. Wait for all Kubernetes nodes in the host cluster to be in the Ready state
+          kubectl wait --for=condition=Ready node --all --timeout=300s
+          # 2. Wait for a core deployment (like CoreDNS) in the host cluster to be available
+          #kubectl wait --for=condition=available deployment/coredns -n kube-system --timeout=300s
+          echo "Host cluster ready. Proceeding with vcluster creation."
+          # ---------------------------------------------------
+
+          install_vcluster # Now executes after a guaranteed ready state
+          ;;
         *)
           echo "Unsupported k8s_method: $k8s_method"
           exit 1
@@ -366,7 +398,7 @@ install_rancher(){
           --set crds.enabled=false
         sleep 5   
       else
-        if [[ "$installation_cert" == "true" ]]; then 
+        if [[ "$generate_cert" == "true" ]]; then 
           echo "Cert-manager not requested, generating self-signed certificates..."
 
           create_openssl_config
@@ -392,8 +424,8 @@ install_rancher(){
           --set bootstrapPassword=admin \
           --set replicas=$n_replicas \
           ${env_install_cmd} \
-          --set rancherImageTag=$rancher_version \ 
-          --version=$rancher_version "
+          --set rancherImageTag=$rancher_version \
+          --version=$rancher_version"
       else
         # Prepare Helm install command for build chart local
         helm_install_cmd="helm install rancher ${chart_install_path} \
@@ -459,7 +491,7 @@ install_rancher(){
 
 update_rancher(){
     # Install cert-manager if requested
-    if [[ "$install_cert_manager" == "false" && "$installation_cert" == "true" ]]; then
+    if [[ "$install_cert_manager" == "false" && "$generate_cert" == "true" ]]; then
       echo "Cert-manager not requested, generating self-signed certificates..."
 
       create_openssl_config

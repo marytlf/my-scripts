@@ -7,6 +7,8 @@ sleep 10
 
 HOST=$(hostname)
 
+K102e4b8d2432f7a838556f3a3d6074b8a2e450ccbedf0386a05d2477a2171c4c34::server:87313f1713391a2e13ae54056fcd024d
+
 curl -sfL https://get.rke2.io | sudo INSTALL_RKE2_VERSION=v1.30.0+rke2r1 sh -
 
 sleep 2
@@ -21,8 +23,8 @@ curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
 sudo ln -s /var/lib/rancher/rke2/bin/kubectl /usr/local/bin/kubectl
 export PATH=$PATH:/opt/rke2/bin
 
-mkdir -p .kube
-sudo cp /etc/rancher/rke2/rke2.yaml .kube/config
+mkdir -p /home/$USER/.kube
+sudo cp /etc/rancher/rke2/rke2.yaml /home/$USER/.kube/config
 sudo chown $USER:$USER /home/$USER/.kube/config
 sudo chmod 600 /home/$USER/.kube/config
 export KUBECONFIG=/home/$USER/.kube/config
@@ -36,7 +38,7 @@ helm repo update
 helm install cert-manager jetstack/cert-manager \
   --namespace cert-manager \
   --create-namespace \
-  --version v1.17.2 \
+  --version v1.17.2 
 
 sleep 60
 #helm repo rm rancher-alpha

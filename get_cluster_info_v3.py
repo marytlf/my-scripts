@@ -716,7 +716,7 @@ def main():
         return
 
     # Save node port scans (scans all nodes from current node)
-    save_node_port_scans(base_dir, node_ips)
+    #save_node_port_scans(base_dir, node_ips)
 
     # Save pods -o wide for all namespaces (cluster-wide, local kubectl)
     save_pods_wide(base_dir, namespaces)

@@ -29,7 +29,7 @@ customLogos:
 debug: false
 extraEnv:
 - name: CATTLE_DEBUG
-  value: '''true'''
+  value: "true"
 extraNodeSelectorTerms: {}
 extraObjects: []
 extraTolerations: {}
@@ -37,8 +37,8 @@ fleet: ""
 hostname: ip-172-31-7-63.sa-east-1.compute.internal
 image:
   pullPolicy: IfNotPresent
-  repository: rancher/rancher
-  tag: ""
+  repository: localhost:5000/rancher
+  tag: "v2.14-420ac52c3-head"
 imagePullSecrets: []
 ingress:
   enabled: true

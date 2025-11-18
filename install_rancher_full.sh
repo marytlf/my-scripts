@@ -292,6 +292,50 @@ install_vcluster(){
   vcluster create "$VCLUSTER_NAME" --chart-version v0.26.1 --expose=true 
 }
 
+choose_k8s_install_method() {
+  # Example: Setup Kubernetes cluster based on k8s_method (simplified)
+    case "$k8s_method" in
+      k3s)
+        echo "Setting up k3s cluster version $k8s_version..."
+        # Add your k3s setup commands here
+        install_k3s
+        install_helm
+        ;;
+      rke2)
+        echo "Setting up rke2 cluster version $k8s_version..."
+        # Add your rke2 setup commands here
+        install_rke2
+        install_helm
+        ;;
+      k3d)
+        echo "Setting up k3d cluster version $k8s_version..."
+        # Add your k3d setup commands here
+        install_k3d
+        install_helm
+        ;;
+      vcluster)
+        echo "Setting up vcluster cluster version $k8s_version..."
+        install_rke2 # This sets up the host cluster
+        install_helm
+        
+        # --- Add Robust Host Cluster Readiness Check Here ---
+        echo "Waiting for host cluster (RKE2) to be ready (up to 5 minutes)..."
+        # 1. Wait for all Kubernetes nodes in the host cluster to be in the Ready state
+        kubectl wait --for=condition=Ready node --all --timeout=300s
+        # 2. Wait for a core deployment (like CoreDNS) in the host cluster to be available
+        #kubectl wait --for=condition=available deployment/coredns -n kube-system --timeout=300s
+        echo "Host cluster ready. Proceeding with vcluster creation."
+        # ---------------------------------------------------
+
+        install_vcluster # Now executes after a guaranteed ready state
+        ;;
+      *)
+        echo "Unsupported k8s_method: $k8s_method"
+        exit 1
+        ;;
+    esac
+}
+
 validate_rancher_channel(){
     case "$rancher_helm_channel" in
         stable)
@@ -343,45 +387,8 @@ install_rancher(){
       fi
 
       echo "Installing Rancher via Helm..."
-
-      # Example: Setup Kubernetes cluster based on k8s_method (simplified)
-      case "$k8s_method" in
-        k3s)
-          echo "Setting up k3s cluster version $k8s_version..."
-          # Add your k3s setup commands here
-          install_k3s
-          ;;
-        rke2)
-          echo "Setting up rke2 cluster version $k8s_version..."
-          # Add your rke2 setup commands here
-          install_rke2
-          ;;
-        k3d)
-          echo "Setting up k3d cluster version $k8s_version..."
-          # Add your k3d setup commands here
-          install_k3d
-          ;;
-        vcluster)
-          echo "Setting up vcluster cluster version $k8s_version..."
-          install_rke2 # This sets up the host cluster
-          
-          # --- Add Robust Host Cluster Readiness Check Here ---
-          echo "Waiting for host cluster (RKE2) to be ready (up to 5 minutes)..."
-          # 1. Wait for all Kubernetes nodes in the host cluster to be in the Ready state
-          kubectl wait --for=condition=Ready node --all --timeout=300s
-          # 2. Wait for a core deployment (like CoreDNS) in the host cluster to be available
-          #kubectl wait --for=condition=available deployment/coredns -n kube-system --timeout=300s
-          echo "Host cluster ready. Proceeding with vcluster creation."
-          # ---------------------------------------------------
-
-          install_vcluster # Now executes after a guaranteed ready state
-          ;;
-        *)
-          echo "Unsupported k8s_method: $k8s_method"
-          exit 1
-          ;;
-      esac
-
+      choose_k8s_install_method
+      
       kubectl create ns cattle-system 
 
       # Install cert-manager if requested
@@ -465,6 +472,7 @@ install_rancher(){
 
     elif [[ "$install_method" == "docker" ]]; then
       echo "Installing Rancher via Docker..."
+
 
       docker_run_cmd="docker run -d --restart=unless-stopped -p 80:80 -p 443:443 \
         --name rancher-server \

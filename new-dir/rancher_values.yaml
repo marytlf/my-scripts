@@ -1,0 +1,100 @@
+addLocal: "true"
+additionalTrustedCAs: false
+agentTLSMode: ""
+antiAffinity: preferred
+auditLog:
+  destination: sidecar
+  enabled: true
+  hostPath: /var/log/rancher/audit/
+  image:
+    pullPolicy: IfNotPresent
+    repository: rancher/mirrored-bci-micro
+    tag: 15.6.24.2
+  level: 1
+  maxAge: 1
+  maxBackup: 1
+  maxSize: 100
+  resources: {}
+bootstrapPassword: admin
+certmanager:
+  version: ""
+customLogos:
+  accessMode: ReadWriteOnce
+  enabled: false
+  size: 1Gi
+  volumeKind: persistentVolumeClaim
+  volumeSubpaths:
+    emberUi: ember
+    vueUi: vue
+debug: false
+extraEnv:
+- name: CATTLE_DEBUG
+  value: '''true'''
+extraNodeSelectorTerms: {}
+extraObjects: []
+extraTolerations: {}
+fleet: ""
+hostname: ip-172-31-7-63.sa-east-1.compute.internal
+image:
+  pullPolicy: IfNotPresent
+  repository: rancher/rancher
+  tag: ""
+imagePullSecrets: []
+ingress:
+  enabled: true
+  extraAnnotations: {}
+  includeDefaultExtraAnnotations: true
+  ingressClassName: ""
+  path: /
+  pathType: ImplementationSpecific
+  servicePort: 80
+  tls:
+    secretName: tls-rancher-ingress
+    source: rancher
+letsEncrypt:
+  environment: production
+  ingress:
+    class: ""
+livenessProbe:
+  failureThreshold: 5
+  periodSeconds: 30
+  timeoutSeconds: 5
+noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local
+postDelete:
+  enabled: true
+  ignoreTimeoutError: false
+  image:
+    repository: rancher/shell
+    tag: v0.5.0
+  namespaceList:
+  - cattle-fleet-system
+  - cattle-system
+  - rancher-operator-system
+  timeout: 120
+preUpgrade:
+  image:
+    repository: rancher/shell
+    tag: v0.5.0
+priorityClassName: rancher-critical
+privateCA: false
+rancherImage: localhost:5000/rancher
+rancherImageTag: v2.14-420ac52c3-head
+readinessProbe:
+  failureThreshold: 5
+  periodSeconds: 30
+  timeoutSeconds: 5
+replicas: 3
+resources: {}
+service:
+  annotations: {}
+  disableHTTP: false
+  type: ""
+startupProbe:
+  failureThreshold: 12
+  periodSeconds: 10
+  timeoutSeconds: 5
+systemDefaultRegistry: ""
+tls: ingress
+topologyKey: kubernetes.io/hostname
+useBundledSystemChart: false
+webhook: ""

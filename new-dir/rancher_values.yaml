@@ -30,6 +30,8 @@ debug: false
 extraEnv:
 - name: CATTLE_DEBUG
   value: "true"
+- name: CATTLE_AGENT_IMAGE
+  value: rancher/rancher:v2.12.3
 extraNodeSelectorTerms: {}
 extraObjects: []
 extraTolerations: {}

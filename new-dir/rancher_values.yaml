@@ -31,7 +31,7 @@ extraEnv:
 - name: CATTLE_DEBUG
   value: "true"
 - name: CATTLE_AGENT_IMAGE
-  value: rancher/rancher:v2.12.3
+  value: registry.rancher.com/rancher/rancher-agent:v2.10.5
 extraNodeSelectorTerms: {}
 extraObjects: []
 extraTolerations: {}
@@ -79,8 +79,8 @@ preUpgrade:
     tag: v0.5.0
 priorityClassName: rancher-critical
 privateCA: false
-rancherImage: localhost:5000/rancher
-rancherImageTag: v2.14-420ac52c3-head
+rancherImage: registry.rancher.com/rancher/rancher
+rancherImageTag: v2.10.5
 readinessProbe:
   failureThreshold: 5
   periodSeconds: 30

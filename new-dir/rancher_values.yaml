@@ -98,10 +98,8 @@ metadata:
       operation: Update
       subresource: status
       time: '2025-11-21T13:56:59Z'
-  name: new-cluster-001
+  name: new-cluster-002
   namespace: fleet-default
-  resourceVersion: '47878'
-  uid: 8123bcb1-78b6-45bb-a79a-d2717ba84e5d
 spec:
   agentEnvVars:
     - name: CATTLE_DEBUG

@@ -32,6 +32,8 @@ extraEnv:
   value: "true"
 - name: CATTLE_AGENT_IMAGE
   value: registry.rancher.com/rancher/rancher-agent:v2.10.5
+- name: CATTLE_CLUSTER_REGISTRY
+  value: registry.rancher.com
 extraNodeSelectorTerms: {}
 extraObjects: []
 extraTolerations: {}
@@ -39,8 +41,8 @@ fleet: ""
 hostname: ip-172-31-7-63.sa-east-1.compute.internal
 image:
   pullPolicy: IfNotPresent
-  repository: localhost:5000/rancher
-  tag: "v2.14-420ac52c3-head"
+  repository: rancher/rancher
+  tag: "v2.10.5"
 imagePullSecrets: []
 ingress:
   enabled: true

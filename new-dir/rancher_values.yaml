@@ -5,7 +5,7 @@ metadata:
   namespace: cattle-system
 spec:
   minAvailable: 3
-  minUnavailable: 2
+  maxUnavailable: 1
   selector:
     matchLabels:
       app: cattle-cluster-agent

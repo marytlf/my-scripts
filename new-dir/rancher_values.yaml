@@ -1,24 +1,107 @@
 apiVersion: rke-machine-config.cattle.io/v1
+blockDurationMinutes: '0'
+enablePrimaryIpv6: false
+encryptEbsVolume: false
+httpProtocolIpv6: disabled
+insecureTransport: false
+instanceType: t2.xlarge
+ipv6AddressCount: '0'
+ipv6AddressOnly: false
 kind: Amazonec2Config
 metadata:
-  # The annotation must point to the new Cluster's UID
   annotations:
-    field.cattle.io/creatorId: user-9rsnr
-    ownerBindingsCreated: "true"
+    field.cattle.io/creatorId: system:admin
+    kubectl.kubernetes.io/last-applied-configuration: >
+      {"accessKey":"","ami":"","apiVersion":"rke-machine-config.cattle.io/v1","instanceType":"t2.xlarge","keypairName":"","kind":"Amazonec2Config","metadata":{"annotations":{"field.cattle.io/creatorId":"user-9rsnr","ownerBindingsCreated":"true"},"generateName":"nc-load-cluster-01-cp-","name":"nc-load-cluster-01-cp-w4x8h","namespace":"fleet-default"},"region":"sa-east-1","rootSize":"16","secretKey":"","securityGroup":["rancher-nodes"],"sshUser":"ubuntu","subnetId":null,"volumeType":"gp2","vpcId":"vpc-051a6e1329e354193","zone":"a"}
+    ownerBindingsCreated: 'true'
+  creationTimestamp: '2025-12-10T15:59:39Z'
   generateName: nc-load-cluster-01-cp-
+  generation: 1
+  managedFields:
+    - apiVersion: rke-machine-config.cattle.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:accessKey: {}
+        f:ami: {}
+        f:blockDurationMinutes: {}
+        f:deviceName: {}
+        f:enablePrimaryIpv6: {}
+        f:encryptEbsVolume: {}
+        f:endpoint: {}
+        f:httpEndpoint: {}
+        f:httpProtocolIpv6: {}
+        f:httpTokens: {}
+        f:iamInstanceProfile: {}
+        f:insecureTransport: {}
+        f:instanceType: {}
+        f:ipv6AddressCount: {}
+        f:ipv6AddressOnly: {}
+        f:keypairName: {}
+        f:kmsKey: {}
+        f:metadata:
+          f:annotations:
+            .: {}
+            f:field.cattle.io/creatorId: {}
+            f:kubectl.kubernetes.io/last-applied-configuration: {}
+            f:ownerBindingsCreated: {}
+          f:generateName: {}
+        f:monitoring: {}
+        f:privateAddressOnly: {}
+        f:region: {}
+        f:requestSpotInstance: {}
+        f:retries: {}
+        f:rootSize: {}
+        f:secretKey: {}
+        f:securityGroup: {}
+        f:securityGroupReadonly: {}
+        f:sessionToken: {}
+        f:spotPrice: {}
+        f:sshKeyContents: {}
+        f:sshUser: {}
+        f:subnetId: {}
+        f:tags: {}
+        f:useEbsOptimizedInstance: {}
+        f:usePrivateAddress: {}
+        f:userdata: {}
+        f:volumeType: {}
+        f:vpcId: {}
+        f:zone: {}
+      manager: kubectl-client-side-apply
+      operation: Update
+      time: '2025-12-10T15:59:39Z'
+    - apiVersion: rke-machine-config.cattle.io/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:ownerReferences:
+            .: {}
+            k:{"uid":"74f51479-cb4d-47fb-b6e1-6b912752bbe4"}: {}
+      manager: rancher
+      operation: Update
+      time: '2025-12-10T15:59:50Z'
   name: nc-load-cluster-01-cp-w4x8h
   namespace: fleet-default
-accessKey: ""
-ami: ""
-instanceType: t2.xlarge # Using t2.xlarge as per your template
-keypairName: ""
+  ownerReferences:
+    - apiVersion: provisioning.cattle.io/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: Cluster
+      name: load-cluster-01
+      uid: 74f51479-cb4d-47fb-b6e1-6b912752bbe4
+  resourceVersion: '4199'
+  uid: ad24358f-4ac7-4ea3-ae0f-67c0c7bfde69
+monitoring: false
+privateAddressOnly: false
 region: sa-east-1
-rootSize: "16"
-secretKey: ""
+requestSpotInstance: false
+retries: '5'
+rootSize: '16'
 securityGroup:
   - rancher-nodes
+securityGroupReadonly: false
 sshUser: ubuntu
-subnetId: null
-vpcId: vpc-051a6e1329e354193 # Use your specific VPC ID
+useEbsOptimizedInstance: false
+usePrivateAddress: false
 volumeType: gp2
+vpcId: vpc-051a6e1329e354193
 zone: a

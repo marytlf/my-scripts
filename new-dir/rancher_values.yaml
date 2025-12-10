@@ -3,11 +3,10 @@ kind: Amazonec2Config
 metadata:
   # The annotation must point to the new Cluster's UID
   annotations:
-    field.cattle.io/creatorId: user-rhkdp
+    field.cattle.io/creatorId: user-9rsnr
     ownerBindingsCreated: "true"
-  generateName: nc-load-cluster-03-wkr-
-  # The name MUST match the machineConfigRef in the Cluster YAML
-  name: nc-load-cluster-03-wkr-lkets
+  generateName: nc-load-cluster-01-cp-
+  name: nc-load-cluster-01-cp-w4x8h
   namespace: fleet-default
 accessKey: ""
 ami: ""

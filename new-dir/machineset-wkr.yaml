@@ -1,0 +1,67 @@
+apiVersion: cluster.x-k8s.io/v1beta1
+kind: MachineSet
+metadata:
+  annotations:
+    machinedeployment.clusters.x-k8s.io/desired-replicas: "3"
+    machinedeployment.clusters.x-k8s.io/max-replicas: "4"
+    machinedeployment.clusters.x-k8s.io/revision: "1"
+    objectset.rio.cattle.io/applied: H4sIAAAAAAAA/4xTTW/bMAz9KwPPdpY0a9MY2GEbdir2gaDbnZboVDMtCRKdNAvy3wc5SeF0dZKjKD4+8pFvCw0JahSEYgtorRMU42xMT1f+ISWRZBSMGykUYRoZ995oKCDUlCtuo1CAbDDVrS2FfLmqoQAf3MpE46yxy17KapK9ezBWf/xyZTWLDUEB7FAfO8jHk6tg0aNK2IqJJNdUYcsCuwxUoG7uR9NQFGw8FLZlzoCxJO7U6NWLid7Y9vkM6RPGJyiAymp+Px6ru0k5m93Opx9mFeopaZrfTZSequpmrrDCWWri7cFy7xznr4PrOgl1dqboSXWN71Hfh2QL5NkojFBMM4jEpMQFKLaphAQUWm5SmeCYjV3+8hqFUkATk9BPx0ZtoIAfrCl2xLLxiWlxAkhxajwfwP2zu6jxod3Rc17fx/R77H/wFP5DaPLsNg1ZGQCdkznU1NvsRfLT9GSUBtWTsbTnOOCu5lu7UFPIg+MEk9AS7HrrLZ2TtCffCehsZZYLqjo7e/ObQnLc3q8npoMMamOTkxcPXz8fazweVzR4jS90uZzmDtzhLrt4gMZWAaOEVkkbaKD5o4YDQ3xq8K+zpG6+7dMuDzKkf65KvNW3anZhrm4HgtJ2l4srNIwl0+LFTeNkLdSbV5Heo7Vvw9rOMroX2+3+BQAA///mUdibqgUAAA
+    objectset.rio.cattle.io/id: rke-cluster
+    objectset.rio.cattle.io/owner-gvk: provisioning.cattle.io/v1, Kind=Cluster
+    objectset.rio.cattle.io/owner-name: load-cluster-01
+    objectset.rio.cattle.io/owner-namespace: fleet-default
+  creationTimestamp: "2025-12-11T13:15:24Z"
+  finalizers:
+  - cluster.x-k8s.io/machineset
+  generation: 1
+  labels:
+    cattle.io/os: linux
+    cluster.x-k8s.io/cluster-name: load-cluster-01
+    cluster.x-k8s.io/deployment-name: load-cluster-01-pool-load-cluster-01-wkr
+    machine-template-hash: 81539947-p4j5n
+    rke.cattle.io/cluster-name: load-cluster-01
+    rke.cattle.io/rke-machine-pool-name: pool-load-cluster-01-wkr
+    rke.cattle.io/worker-role: "true"
+  name: load-cluster-01-pool-load-cluster-01-wkr-p4j5n
+  namespace: fleet-default
+  ownerReferences:
+  - apiVersion: cluster.x-k8s.io/v1beta1
+    blockOwnerDeletion: true
+    controller: true
+    kind: MachineDeployment
+    name: load-cluster-01-pool-load-cluster-01-wkr
+    uid: 635b2468-5168-40ec-a474-b1d48664462f
+  resourceVersion: "10118"
+  uid: fa9094ac-4107-46b3-8b89-a1dfd704d0d3
+spec:
+  clusterName: load-cluster-01
+  deletePolicy: Oldest
+  replicas: 6
+  selector:
+    matchLabels:
+      cluster.x-k8s.io/cluster-name: load-cluster-01
+      cluster.x-k8s.io/deployment-name: load-cluster-01-pool-load-cluster-01-wkr
+      machine-template-hash: 81539947-p4j5n
+  template:
+    metadata:
+      labels:
+        cattle.io/os: linux
+        cluster.x-k8s.io/cluster-name: load-cluster-01
+        cluster.x-k8s.io/deployment-name: load-cluster-01-pool-load-cluster-01-wkr
+        machine-template-hash: 81539947-p4j5n
+        rke.cattle.io/cluster-name: load-cluster-01
+        rke.cattle.io/rke-machine-pool-name: pool-load-cluster-01-wkr
+        rke.cattle.io/worker-role: "true"
+    spec:
+      bootstrap:
+        configRef:
+          apiVersion: rke.cattle.io/v1
+          kind: RKEBootstrapTemplate
+          name: load-cluster-01-bootstrap-template
+          namespace: fleet-default
+      clusterName: load-cluster-01
+      infrastructureRef:
+        apiVersion: rke-machine.cattle.io/v1
+        kind: Amazonec2MachineTemplate
+        name: load-cluster-01-pool-load-cluster-01-wkr-cba5d5c7
+        namespace: fleet-default

@@ -6,7 +6,7 @@ metadata:
     app: test-app
 spec:
   # Define how many identical Pods should be running
-  replicas: 3
+  replicas: 5
   selector:
     matchLabels:
       app: test-app

@@ -11,9 +11,8 @@ metadata:
     objectset.rio.cattle.io/owner-name: load-cluster-01
     objectset.rio.cattle.io/owner-namespace: fleet-default
   creationTimestamp: "2025-12-11T13:15:24Z"
-  finalizers:
-  - cluster.x-k8s.io/machineset
-  generation: 1
+  finalizers: 
+  generation: 2
   labels:
     cattle.io/os: linux
     cluster.x-k8s.io/cluster-name: load-cluster-01

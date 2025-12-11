@@ -1,0 +1,24 @@
+apiVersion: rke-machine-config.cattle.io/v1
+kind: Amazonec2Config
+metadata:
+  # The annotation must point to the new Cluster's UID
+  annotations:
+    field.cattle.io/creatorId: user-jqj7s
+    ownerBindingsCreated: "true"
+  generateName: nc-load-cluster-02-wkr-
+  name: nc-load-cluster-02-wkr-jj1sq
+  namespace: fleet-default
+accessKey: ""
+ami: ""
+instanceType: t2.xlarge
+keypairName: ""
+region: sa-east-1
+rootSize: "16"
+secretKey: ""
+securityGroup:
+  - rancher-nodes
+sshUser: ubuntu
+subnetId: null
+vpcId: vpc-051a6e1329e354193 # Use your specific VPC ID
+volumeType: gp2
+zone: a

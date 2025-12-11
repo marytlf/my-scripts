@@ -219,7 +219,7 @@ metadata:
       time: '2025-12-11T18:18:01Z'
   name: cattle-cluster-agent
   namespace: cattle-system
-  resourceVersion: '105874'
+  resourceVersion: '109874'
   uid: 4060092a-128d-46ca-9b5c-7668066489e5
 spec:
   progressDeadlineSeconds: 600

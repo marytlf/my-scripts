@@ -4,7 +4,7 @@ metadata:
   name: test-pdb
   namespace: cattle-system
 spec:
-  maxUnavailable: 0
+  minAvailable: 3
   selector:
     matchLabels:
       app: cattle-cluster-agent

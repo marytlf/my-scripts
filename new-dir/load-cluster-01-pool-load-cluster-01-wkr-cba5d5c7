@@ -1,0 +1,68 @@
+apiVersion: rke-machine.cattle.io/v1
+kind: Amazonec2MachineTemplate
+metadata:
+  annotations:
+    objectset.rio.cattle.io/applied: H4sIAAAAAAAA/4xUTY/bNhD9K8WcRdcf0boW0EOwXRTBIs2iu82l6GFEjmSuKQ5Djrz1Bv7vAWXZcfYLuUnkezNv3szwK2Cwnykmyx4qiBtSHeq19TTRKOJoYvnX7QwK2FhvoIL3HT6yJz3/eIDdURccCkEBHQkaFITqK6D3LCiWfcq/XN+TlkQyiZbPIlszJtWuT0IRileh/OApqna7gQpC5K3Nkq1vf9BZ/HJtvfn98iejeewIKnCM5qhATWc/RUsBdeY2jkiUoQZ7J1DkYs7w2rEno5rInWoj90FtX/JaafaNbZ9a/nqsp824HPhvUsZavVZPylUPm6ju72fpC+wLcFiTe7Nna0xrqIDqZvXbdKovZvVyWa4W75YNmgUZWl3MtFnoZr7S2ODyDTdD7P3gIbpEz8QfvZFxwtSYWNdYmlIvs9qXG6gCs3uxzBP3QH25ifsCUiCdPRjpf702J0dtGXvkoNaU0jXtoAIoADt7+Kgd680ffRy24qP1vVCCCqZQgOauyzORE3JvLiMZ8mLR3ZKOJGP6gzWqdVyjU3nTKq1VUz74Mms2tLWaRiwUQF7HXZCrOn1m1+fTwed8YQJbLwfYWiRcPTu54w3l1c3/FrsPPgl6TTeRG+vGBNYn0n2ku4g+BY5yymBH+N0uZKzMJ/87jG3u8YZ2AW38LnPTffeqY2+Fo/XtKVSIdotC742JlNIn73anq0jtYZMSKsIkatgZ+tJTktvAchR9RpBoB9PLjGSWW/uYZcwuoIA0eH3SMtRmZfdnXluo/oWIXq/z9rOhBP89QfxNaPhcXaKUF30wcowYWG6iHSZuOilz41NaX9Pukr2Ql9HulNb/JIpQQV/3Xvp81Nee5IM5AATbEdonuqrTpyC2s49knhXcJ7r5wb/zm3h4q3Oc7TAgY7faMM9HQQ/5tkGraTnDC5ot5italO9mqwUUkN8dqABhv9/vvwUAAP//el8mukYGAAA
+    objectset.rio.cattle.io/id: rke-cluster
+    objectset.rio.cattle.io/owner-gvk: provisioning.cattle.io/v1, Kind=Cluster
+    objectset.rio.cattle.io/owner-name: load-cluster-01
+    objectset.rio.cattle.io/owner-namespace: fleet-default
+    rke.cattle.io/cloned-from-group-version: rke-machine-config.cattle.io/v1
+    rke.cattle.io/cloned-from-kind: Amazonec2Config
+    rke.cattle.io/cloned-from-name: nc-load-cluster-01-wkr-jj1sq
+  creationTimestamp: "2025-12-11T13:15:23Z"
+  generation: 1
+  labels:
+    objectset.rio.cattle.io/hash: ebf9800c61b7759347fad3ede961cd3cf29cafa7
+    objectset.rio.cattle.io/prune: "false"
+    rke.cattle.io/machine-template-hash: cba5d5c7
+  name: load-cluster-01-pool-load-cluster-01-wkr-cba5d5c7
+  namespace: fleet-default
+  ownerReferences:
+  - apiVersion: cluster.x-k8s.io/v1beta1
+    kind: Cluster
+    name: load-cluster-01
+    uid: dd79ddce-01d5-4872-af93-5b1465ac403b
+  resourceVersion: "5815"
+  uid: 9fabf9eb-5a74-43df-a129-7961385779f4
+spec:
+  clusterName: load-cluster-01
+  template:
+    spec:
+      accessKey: ""
+      ami: ""
+      blockDurationMinutes: "0"
+      common:
+        cloudCredentialSecretName: cattle-global-data:cc-f5wn5
+      deviceName: ""
+      encryptEbsVolume: false
+      endpoint: ""
+      httpEndpoint: ""
+      httpTokens: ""
+      iamInstanceProfile: ""
+      insecureTransport: false
+      instanceType: t2.2xlarge
+      keypairName: ""
+      kmsKey: ""
+      monitoring: false
+      privateAddressOnly: false
+      region: sa-east-1
+      requestSpotInstance: false
+      retries: "5"
+      rootSize: "16"
+      secretKey: ""
+      securityGroup:
+      - rancher-nodes
+      securityGroupReadonly: false
+      sessionToken: ""
+      spotPrice: "0.50"
+      sshKeyContents: ""
+      sshUser: ubuntu
+      subnetId: ""
+      tags: ""
+      useEbsOptimizedInstance: false
+      usePrivateAddress: false
+      userdata: ""
+      volumeType: gp2
+      vpcId: vpc-051a6e1329e354193
+      zone: a

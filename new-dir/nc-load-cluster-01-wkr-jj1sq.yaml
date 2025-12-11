@@ -5,12 +5,12 @@ metadata:
   annotations:
     field.cattle.io/creatorId: user-jqj7s
     ownerBindingsCreated: "true"
-  generateName: nc-load-cluster-02-wkr-
-  name: nc-load-cluster-02-wkr-jj1sq
+  generateName: nc-load-cluster-01-wkr-
+  name: nc-load-cluster-01-wkr-jj1sq
   namespace: fleet-default
 accessKey: ""
 ami: ""
-instanceType: t2.xlarge
+instanceType: t2.2xlarge
 keypairName: ""
 region: sa-east-1
 rootSize: "16"

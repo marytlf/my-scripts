@@ -1,4 +1,4 @@
-apiVersion: provisioning.cattle.io/v1
+piVersion: provisioning.cattle.io/v1
 kind: Cluster
 metadata:
   annotations:

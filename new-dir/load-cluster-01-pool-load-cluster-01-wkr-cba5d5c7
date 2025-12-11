@@ -9,14 +9,14 @@ metadata:
     objectset.rio.cattle.io/owner-namespace: fleet-default
     rke.cattle.io/cloned-from-group-version: rke-machine-config.cattle.io/v1
     rke.cattle.io/cloned-from-kind: Amazonec2Config
-    rke.cattle.io/cloned-from-name: nc-load-cluster-01-wkr-jj1sq
+    rke.cattle.io/cloned-from-name: nc-load-cluster-02-wkr-jj1sq
   creationTimestamp: "2025-12-11T13:15:23Z"
   generation: 1
   labels:
     objectset.rio.cattle.io/hash: ebf9800c61b7759347fad3ede961cd3cf29cafa7
     objectset.rio.cattle.io/prune: "false"
-    rke.cattle.io/machine-template-hash: cba5d5c7
-  name: load-cluster-01-pool-load-cluster-01-wkr-cba5d5c7
+    rke.cattle.io/machine-template-hash: cba5d5c8
+  name: load-cluster-01-pool-load-cluster-02-wkr-cba5d5c8
   namespace: fleet-default
   ownerReferences:
   - apiVersion: cluster.x-k8s.io/v1beta1

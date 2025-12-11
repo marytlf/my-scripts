@@ -13,7 +13,7 @@ metadata:
     objectset.rio.cattle.io/owner-name: cluster-agent
     objectset.rio.cattle.io/owner-namespace: kube-system
   creationTimestamp: '2025-12-11T13:16:47Z'
-  generation: 15
+  generation: 17
   labels:
     app.kubernetes.io/managed-by: Helm
     objectset.rio.cattle.io/hash: 58e2883fa889a27c625c71ad9605905fdaa552b0

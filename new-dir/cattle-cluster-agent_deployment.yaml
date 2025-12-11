@@ -2,20 +2,21 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    deployment.kubernetes.io/revision: '3'
-    kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"management.cattle.io/scale-available":"2"},"name":"cattle-cluster-agent","namespace":"cattle-system"},"spec":{"selector":{"matchLabels":{"app":"cattle-cluster-agent"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app":"cattle-cluster-agent"}},"spec":{"affinity":{"nodeAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/controlplane","operator":"In","values":["true"]}]},"weight":100},{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/control-plane","operator":"In","values":["true"]}]},"weight":100},{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/master","operator":"In","values":["true"]}]},"weight":100},{"preference":{"matchExpressions":[{"key":"cattle.io/cluster-agent","operator":"In","values":["true"]}]},"weight":1}],"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"beta.kubernetes.io/os","operator":"NotIn","values":["windows"]}]}]}},"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["cattle-cluster-agent"]}]},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"env":[{"name":"CATTLE_FEATURES","value":"embedded-cluster-api=false,fleet=false,managed-system-upgrade-controller=false,multi-cluster-management=false,multi-cluster-management-agent=true,provisioningprebootstrap=false,provisioningv2=false,rke2=false,ui-sql-cache=false"},{"name":"CATTLE_IS_RKE","value":"false"},{"name":"CATTLE_SERVER","value":"https://ip-172-31-12-105.sa-east-1.compute.internal"},{"name":"CATTLE_CA_CHECKSUM","value":"32702b036ebec07646533fbc851820943557d929f98c083be630de6ee2a86e86"},{"name":"CATTLE_CLUSTER","value":"true"},{"name":"CATTLE_K8S_MANAGED","value":"true"},{"name":"CATTLE_CLUSTER_REGISTRY","value":""},{"name":"CATTLE_CREDENTIAL_NAME","value":"cattle-credentials-61106f880e"},{"name":"CATTLE_SERVER_VERSION","value":"v2.11.3"},{"name":"CATTLE_INSTALL_UUID","value":"1c9d7653-211e-48fe-b252-01beb3903b14"},{"name":"CATTLE_INGRESS_IP_DOMAIN","value":"sslip.io"},{"name":"STRICT_VERIFY","value":"true"}],"image":"rancher/rancher-agent:v2.11.3","imagePullPolicy":"IfNotPresent","name":"cluster-register","volumeMounts":[{"mountPath":"/cattle-credentials","name":"cattle-credentials","readOnly":true}]}],"serviceAccountName":"cattle","tolerations":[{"effect":"NoSchedule","key":"node-role.kubernetes.io/controlplane","value":"true"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane","operator":"Exists"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/master","operator":"Exists"}],"volumes":[{"name":"cattle-credentials","secret":{"defaultMode":320,"secretName":"cattle-credentials-61106f880e"}}]}}}}
-    management.cattle.io/scale-available: '2'
+    deployment.kubernetes.io/revision: '4'
+    management.cattle.io/scale-available: '4'
+    meta.helm.sh/release-name: my-scripts-new-dir
+    meta.helm.sh/release-namespace: default
     objectset.rio.cattle.io/applied: >-
       H4sIAAAAAAAA/8RW227bOBD9lQWfJUcXXwX0QUjUrpHEDSy7QFEEBkWOZG4oUktSTozC/76gLCdy7LSb7S72SRcOz5yZOTPkd4Qr9gWUZlKgCOGq0hcbHznogQmKInQFFZfbEoRBDirBYIoNRtF3hIWQBhsmhbafJRa4AGvXI9gYDj0mLzTBHFy8wYzjjAOKUIAcJLM/gBgNpqeY7Fgz6+8H6/JRgHKLzQOK0EOoOysb3/ntmgn6IaZUip9CCFxaLoTX2oBycbGP7uebdIWJ3flQZ+DqrTZQop2DOM6AN1l4C2KN9dp6HJAQgzfAeEjyEfR9GmReEMAEY9LPCcnDUUjHed+CHkg2GO5rrl02rckLH10BsWw0cCBGqn19DFnfPBPFVfUW+M4iGIUNFFtrqiTnTBTLimIDe6intFYFoMh37MdSdCrs7RxktpXlNT/aaP9DWfEDSEdK/G/TagPDec4EMw09ISnEne9KQQ5KAb2qFRNFStZAa8tjWgj5/Dt5AlKbRvPfDntAEHhOVfJUKdB6L+9v39EDbFHUOHOV5NCzElACDGhbXyKFUZJXHAuwSqpA4SbxaGrluMG8BouDjKoB3e/udw56BFasDYp8z9s5/x4H938lUWJbsv/a+0tjnfTwu9zu7h2k4M+avUMue8WlbWstQJV7Zj+gm4HBr/Ik9THZmTSv+D4yQeWjbijfW/FXksbCsF/WuqQHCEv+uf/S18PifCy2Q3+U5rO9u0+7kZXkstheN0DH+VhLbZqJ90oVTeRW2ZgJUHsiIDbNs52Ql/FicZOsPibxYjlP0gMbFCEoM6AU6Aubin3IMdfg5BzAtO/7o4u2A9Stq0JhCi6RyIry2Ms0Xc2vk46PBuKMYZrMvyTzjuHamEpHFxescv1R4Ia+6weu7w16GruAtXH9HpFlVRvoMWFACczPwF7Gq8vfk8vrdHnbwQ6DkRdkXjiEDIg3GvaHgzDMMzIe+OPAm/TDwWBEJ8Ekn4yJNw4zGIYehSFAgMdDGA/PObpZpoujAJoGOjW8Hqer23gWf0qufm7coq7myadpuph/7ew4Zz1PrpLZYhrfrGbxbTfrB5UpoCAMw1y7g2HgBx4Nc//Naqy+JPN0+nnWAdoEPd/vhecqPUsX8c3NarmcdgPzyYSOhoPQDXwf3P44BzcLBoHr+Rlk4cQLM79/Fu3TPEnT1fRudfX5Np52OWjNWdVjR3JLF/Pp5cISnn78epLXewexEtsTGCksyBrURfvcN1x0CKu1u6s5v5OcEdt403wmzZ0C/XKT6FyGFBSsHeEbyesSbmUtTDvi7OsdNvYqc3FaAnRyaTlaU4DpZ8G3KLJB2KnmIA1qwwjEhFjoWXc3sgOD2zHzPIEgz4GYZlq2o85avetkPtHnL2CeO2mTJ6aN/sfI547PA+T9oSK6O/3OploDUWDsJKeQ45qbW0kBRWHgHdZmb+0+6iM7fne7vwIAAP//OdyL3yMMAAA
-    objectset.rio.cattle.io/id: ''
+    objectset.rio.cattle.io/id: default-my-scripts-new-dir
     objectset.rio.cattle.io/owner-gvk: k3s.cattle.io/v1, Kind=Addon
     objectset.rio.cattle.io/owner-name: cluster-agent
     objectset.rio.cattle.io/owner-namespace: kube-system
   creationTimestamp: '2025-12-11T13:16:47Z'
-  generation: 8
+  generation: 15
   labels:
-    objectset.rio.cattle.io/hash: c5c3ae05aa6cf7e41d2b022e9aac4fccf373d8f4
+    app.kubernetes.io/managed-by: Helm
+    objectset.rio.cattle.io/hash: 58e2883fa889a27c625c71ad9605905fdaa552b0
   managedFields:
     - apiVersion: apps/v1
       fieldsType: FieldsV1
@@ -23,15 +24,11 @@ metadata:
         f:metadata:
           f:annotations:
             .: {}
-            f:management.cattle.io/scale-available: {}
             f:objectset.rio.cattle.io/applied: {}
-            f:objectset.rio.cattle.io/id: {}
             f:objectset.rio.cattle.io/owner-gvk: {}
             f:objectset.rio.cattle.io/owner-name: {}
             f:objectset.rio.cattle.io/owner-namespace: {}
-          f:labels:
-            .: {}
-            f:objectset.rio.cattle.io/hash: {}
+          f:labels: {}
         f:spec:
           f:progressDeadlineSeconds: {}
           f:revisionHistoryLimit: {}
@@ -143,15 +140,6 @@ metadata:
     - apiVersion: apps/v1
       fieldsType: FieldsV1
       fieldsV1:
-        f:metadata:
-          f:annotations:
-            f:kubectl.kubernetes.io/last-applied-configuration: {}
-      manager: kubectl-client-side-apply
-      operation: Update
-      time: '2025-12-11T13:18:41Z'
-    - apiVersion: apps/v1
-      fieldsType: FieldsV1
-      fieldsV1:
         f:spec:
           f:template:
             f:spec:
@@ -170,11 +158,31 @@ metadata:
     - apiVersion: apps/v1
       fieldsType: FieldsV1
       fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:meta.helm.sh/release-name: {}
+            f:meta.helm.sh/release-namespace: {}
+            f:objectset.rio.cattle.io/id: {}
+          f:labels:
+            f:app.kubernetes.io/managed-by: {}
+            f:objectset.rio.cattle.io/hash: {}
+      manager: fleetagent
+      operation: Update
+      time: '2025-12-11T17:56:31Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:management.cattle.io/scale-available: {}
         f:spec:
           f:replicas: {}
+          f:template:
+            f:metadata:
+              f:namespace: {}
       manager: agent
       operation: Update
-      time: '2025-12-11T17:46:05Z'
+      time: '2025-12-11T18:17:59Z'
     - apiVersion: apps/v1
       fieldsType: FieldsV1
       fieldsV1:
@@ -208,14 +216,14 @@ metadata:
       manager: kube-controller-manager
       operation: Update
       subresource: status
-      time: '2025-12-11T17:46:06Z'
+      time: '2025-12-11T18:18:01Z'
   name: cattle-cluster-agent
   namespace: cattle-system
-  resourceVersion: '94689'
+  resourceVersion: '105874'
   uid: 4060092a-128d-46ca-9b5c-7668066489e5
 spec:
   progressDeadlineSeconds: 600
-  replicas: 3
+  replicas: 4
   revisionHistoryLimit: 10
   selector:
     matchLabels:
@@ -230,6 +238,7 @@ spec:
       creationTimestamp: null
       labels:
         app: cattle-cluster-agent
+      namespace: cattle-system
     spec:
       affinity:
         nodeAffinity:

@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   annotations:
     deployment.kubernetes.io/revision: '4'
-    management.cattle.io/scale-available: '4'
+    management.cattle.io/scale-available: '6'
     meta.helm.sh/release-name: my-scripts-new-dir
     meta.helm.sh/release-namespace: default
     objectset.rio.cattle.io/applied: >-
@@ -223,7 +223,7 @@ metadata:
   uid: 4060092a-128d-46ca-9b5c-7668066489e5
 spec:
   progressDeadlineSeconds: 600
-  replicas: 4
+  replicas: 6
   revisionHistoryLimit: 10
   selector:
     matchLabels:

@@ -2,22 +2,19 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    deployment.kubernetes.io/revision: '8'
-    meta.helm.sh/release-namespace: default
-    meta.helm.sh/release-name: my-scripts-cl2-new-dir-2
+    deployment.kubernetes.io/revision: '10'
     kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"management.cattle.io/scale-available":"2"},"name":"cattle-cluster-agent","namespace":"cattle-system"},"spec":{"selector":{"matchLabels":{"app":"cattle-cluster-agent"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app":"cattle-cluster-agent"}},"spec":{"affinity":{"nodeAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/controlplane","operator":"In","values":["true"]}]},"weight":100},{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/control-plane","operator":"In","values":["true"]}]},"weight":100},{"preference":{"matchExpressions":[{"key":"cattle.io/cluster-agent","operator":"In","values":["true"]}]},"weight":1}],"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/os","operator":"NotIn","values":["windows"]}]}]}},"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["cattle-cluster-agent"]}]},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"env":[{"name":"CATTLE_FEATURES","value":"embedded-cluster-api=false,fleet=false,managed-system-upgrade-controller=true,multi-cluster-management=false,multi-cluster-management-agent=true,provisioningprebootstrap=false,provisioningv2=false,rke2=false,ui-sql-cache=true"},{"name":"CATTLE_SERVER","value":"https://ip-172-31-4-100.sa-east-1.compute.internal"},{"name":"CATTLE_CA_CHECKSUM","value":"2c1e4e07a24c4ebbdfa5b140980eaf23e3144c07412b6b26f4c743a4dc89811c"},{"name":"CATTLE_CLUSTER","value":"true"},{"name":"CATTLE_K8S_MANAGED","value":"true"},{"name":"CATTLE_CLUSTER_REGISTRY","value":""},{"name":"CATTLE_CREDENTIAL_NAME","value":"cattle-credentials-d63f2cb575"},{"name":"CATTLE_SUC_APP_NAME_OVERRIDE","value":"mcc-load-cluster-01-managed-system-upgrade-con-07f5f"},{"name":"CATTLE_SERVER_VERSION","value":"v2.12.3"},{"name":"CATTLE_INSTALL_UUID","value":"ec95620e-b1a6-459a-a848-3e36fb601114"},{"name":"CATTLE_INGRESS_IP_DOMAIN","value":"sslip.io"},{"name":"STRICT_VERIFY","value":"true"}],"image":"rancher/rancher-agent:v2.12.3","imagePullPolicy":"IfNotPresent","name":"cluster-register","volumeMounts":[{"mountPath":"/cattle-credentials","name":"cattle-credentials","readOnly":true}]}],"serviceAccountName":"cattle","tolerations":[{"effect":"NoSchedule","key":"node-role.kubernetes.io/controlplane","value":"true"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane","operator":"Exists"}],"volumes":[{"name":"cattle-credentials","secret":{"defaultMode":320,"secretName":"cattle-credentials-d63f2cb575"}}]}}}}
+      {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{"management.cattle.io/scale-available":"2"},"name":"cattle-cluster-agent","namespace":"cattle-system"},"spec":{"selector":{"matchLabels":{"app":"cattle-cluster-agent"}},"strategy":{"rollingUpdate":{"maxSurge":1,"maxUnavailable":0},"type":"RollingUpdate"},"template":{"metadata":{"labels":{"app":"cattle-cluster-agent"}},"spec":{"affinity":{"nodeAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/controlplane","operator":"In","values":["true"]}]},"weight":100},{"preference":{"matchExpressions":[{"key":"node-role.kubernetes.io/control-plane","operator":"In","values":["true"]}]},"weight":100},{"preference":{"matchExpressions":[{"key":"cattle.io/cluster-agent","operator":"In","values":["true"]}]},"weight":1}],"requiredDuringSchedulingIgnoredDuringExecution":{"nodeSelectorTerms":[{"matchExpressions":[{"key":"kubernetes.io/os","operator":"NotIn","values":["windows"]}]}]}},"podAntiAffinity":{"preferredDuringSchedulingIgnoredDuringExecution":[{"podAffinityTerm":{"labelSelector":{"matchExpressions":[{"key":"app","operator":"In","values":["cattle-cluster-agent"]}]},"topologyKey":"kubernetes.io/hostname"},"weight":100}]}},"containers":[{"env":[{"name":"CATTLE_FEATURES","value":"embedded-cluster-api=false,fleet=false,managed-system-upgrade-controller=true,multi-cluster-management=false,multi-cluster-management-agent=true,provisioningprebootstrap=false,provisioningv2=false,rke2=false,ui-sql-cache=true"},{"name":"CATTLE_SERVER","value":"https://ip-172-31-4-100.sa-east-1.compute.internal"},{"name":"CATTLE_CA_CHECKSUM","value":"2c1e4e07a24c4ebbdfa5b140980eaf23e3144c07412b6b26f4c743a4dc89811c"},{"name":"CATTLE_CLUSTER","value":"true"},{"name":"CATTLE_K8S_MANAGED","value":"true"},{"name":"CATTLE_CLUSTER_REGISTRY","value":"registry.rancher.com"},{"name":"CATTLE_CREDENTIAL_NAME","value":"cattle-credentials-d63f2cb575"},{"name":"CATTLE_SUC_APP_NAME_OVERRIDE","value":"mcc-load-cluster-01-managed-system-upgrade-con-07f5f"},{"name":"CATTLE_SERVER_VERSION","value":"v2.12.4"},{"name":"CATTLE_INSTALL_UUID","value":"ec95620e-b1a6-459a-a848-3e36fb601114"},{"name":"CATTLE_INGRESS_IP_DOMAIN","value":"sslip.io"},{"name":"STRICT_VERIFY","value":"true"}],"image":"registry.rancher.com/rancher/rancher-agent:v2.12.4","imagePullPolicy":"IfNotPresent","name":"cluster-register","volumeMounts":[{"mountPath":"/cattle-credentials","name":"cattle-credentials","readOnly":true}]}],"serviceAccountName":"cattle","tolerations":[{"effect":"NoSchedule","key":"node-role.kubernetes.io/controlplane","value":"true"},{"effect":"NoSchedule","key":"node-role.kubernetes.io/control-plane","operator":"Exists"}],"volumes":[{"name":"cattle-credentials","secret":{"defaultMode":320,"secretName":"cattle-credentials-d63f2cb575"}}]}}}}
     management.cattle.io/scale-available: '6'
     objectset.rio.cattle.io/applied: >-
-      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
+      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
     objectset.rio.cattle.io/id: ''
     objectset.rio.cattle.io/owner-gvk: k3s.cattle.io/v1, Kind=Addon
     objectset.rio.cattle.io/owner-name: cluster-agent
     objectset.rio.cattle.io/owner-namespace: kube-system
   creationTimestamp: '2025-12-12T14:46:07Z'
-  generation: 9
+  generation: 13
   labels:
-    app.kubernetes.io/managed-by: Helm
     objectset.rio.cattle.io/hash: c5c3ae05aa6cf7e41d2b022e9aac4fccf373d8f4
   managedFields:
     - apiVersion: apps/v1
@@ -39,7 +36,6 @@ metadata:
           f:annotations:
             .: {}
             f:management.cattle.io/scale-available: {}
-            f:objectset.rio.cattle.io/applied: {}
             f:objectset.rio.cattle.io/id: {}
             f:objectset.rio.cattle.io/owner-gvk: {}
             f:objectset.rio.cattle.io/owner-name: {}
@@ -113,15 +109,12 @@ metadata:
                     k:{"name":"CATTLE_SERVER_VERSION"}:
                       .: {}
                       f:name: {}
-                      f:value: {}
                     k:{"name":"CATTLE_SUC_APP_NAME_OVERRIDE"}:
                       .: {}
                       f:name: {}
                     k:{"name":"STRICT_VERIFY"}:
                       .: {}
                       f:name: {}
-                      f:value: {}
-                  f:image: {}
                   f:imagePullPolicy: {}
                   f:name: {}
                   f:resources: {}
@@ -165,24 +158,24 @@ metadata:
               f:containers:
                 k:{"name":"cluster-register"}:
                   f:env:
+                    k:{"name":"CATTLE_CLUSTER_REGISTRY"}:
+                      f:value: {}
                     k:{"name":"CATTLE_FEATURES"}:
+                      f:value: {}
+                    k:{"name":"CATTLE_SERVER_VERSION"}:
                       f:value: {}
                     k:{"name":"CATTLE_SUC_APP_NAME_OVERRIDE"}:
                       f:value: {}
+                  f:image: {}
       manager: kubectl-client-side-apply
       operation: Update
-      time: '2025-12-12T14:48:24Z'
+      time: '2025-12-15T12:02:20Z'
     - apiVersion: apps/v1
       fieldsType: FieldsV1
       fieldsV1:
-        f:spec:
-          f:replicas: {}
-      manager: agent
-      operation: Update
-      time: '2025-12-12T14:49:24Z'
-    - apiVersion: apps/v1
-      fieldsType: FieldsV1
-      fieldsV1:
+        f:metadata:
+          f:annotations:
+            f:objectset.rio.cattle.io/applied: {}
         f:spec:
           f:template:
             f:spec:
@@ -191,13 +184,23 @@ metadata:
                   f:env:
                     k:{"name":"CATTLE_CREDENTIAL_NAME"}:
                       f:value: {}
+                    k:{"name":"STRICT_VERIFY"}:
+                      f:value: {}
               f:volumes:
                 k:{"name":"cattle-credentials"}:
                   f:secret:
                     f:secretName: {}
-      manager: deploy@load-cluster-01-pool-load-cluster-01-cp-5wrmt-lv5vq
+      manager: deploy@load-cluster-01-pool-load-cluster-01-cp-5wrmt-rq6sb
       operation: Update
-      time: '2025-12-12T14:49:30Z'
+      time: '2025-12-15T15:50:17Z'
+    - apiVersion: apps/v1
+      fieldsType: FieldsV1
+      fieldsV1:
+        f:spec:
+          f:replicas: {}
+      manager: agent
+      operation: Update
+      time: '2025-12-18T13:32:36Z'
     - apiVersion: apps/v1
       fieldsType: FieldsV1
       fieldsV1:
@@ -231,10 +234,10 @@ metadata:
       manager: kube-controller-manager
       operation: Update
       subresource: status
-      time: '2025-12-12T14:49:35Z'
+      time: '2025-12-18T13:32:36Z'
   name: cattle-cluster-agent
   namespace: cattle-system
-  resourceVersion: '3472'
+  resourceVersion: '803799'
   uid: c1e85a1c-5d8b-4a12-bd57-83b83469a020
 spec:
   progressDeadlineSeconds: 600
@@ -312,19 +315,20 @@ spec:
             - name: CATTLE_K8S_MANAGED
               value: 'true'
             - name: CATTLE_CLUSTER_REGISTRY
+              value: registry.rancher.com
             - name: CATTLE_CREDENTIAL_NAME
               value: cattle-credentials-6c7fc9d959
             - name: CATTLE_SUC_APP_NAME_OVERRIDE
               value: mcc-load-cluster-01-managed-system-upgrade-con-07f5f
             - name: CATTLE_SERVER_VERSION
-              value: v2.12.3
+              value: v2.12.4
             - name: CATTLE_INSTALL_UUID
               value: ec95620e-b1a6-459a-a848-3e36fb601114
             - name: CATTLE_INGRESS_IP_DOMAIN
               value: sslip.io
             - name: STRICT_VERIFY
-              value: 'true'
-          image: rancher/rancher-agent:v2.12.3
+              value: 'false'
+          image: registry.rancher.com/rancher/rancher-agent:v2.12.4
           imagePullPolicy: IfNotPresent
           name: cluster-register
           resources: {}

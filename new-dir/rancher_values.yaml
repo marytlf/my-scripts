@@ -4,7 +4,7 @@ metadata:
   name: test-pdb
   namespace: default
 spec:
-  minAvailable: 3
+  maxUnavailable: 3
   selector:
     matchLabels:
       app: test-app

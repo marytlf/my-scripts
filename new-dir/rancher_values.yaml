@@ -2,9 +2,9 @@ apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: test-pdb
-  namespace: cattle-system
+  namespace: default
 spec:
   minAvailable: 3
   selector:
     matchLabels:
-      app: cattle-cluster-agent
+      app: test-app

@@ -1,0 +1,11 @@
+# 70-tls.ldif
+dn: cn=config
+changetype: modify
+replace: olcTLSCertificateFile
+olcTLSCertificateFile: /container/service/slapd/assets/certs/ldap.crt
+-
+replace: olcTLSCertificateKeyFile
+olcTLSCertificateKeyFile: /container/service/slapd/assets/certs/ldap.key
+-
+replace: olcTLSCACertFile
+olcTLSCACertFile: /container/service/slapd/assets/certs/ca.crt

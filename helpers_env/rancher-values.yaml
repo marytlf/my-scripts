@@ -1,0 +1,126 @@
+addLocal: "true"
+additionalTrustedCAs: false
+agentTLSMode: ""
+antiAffinity: preferred
+auditLog:
+  destination: sidecar
+  enabled: false
+  hostPath: /var/log/rancher/audit/
+  image:
+    pullPolicy: IfNotPresent
+    repository: rancher/mirrored-bci-micro
+    tag: 15.6.24.2
+  level: 0
+  maxAge: 1
+  maxBackup: 1
+  maxSize: 100
+  resources: {}
+bootstrapPassword: admin
+certmanager:
+  version: ""
+customLogos:
+  accessMode: ReadWriteOnce
+  enabled: false
+  size: 1Gi
+  volumeKind: persistentVolumeClaim
+  volumeSubpaths:
+    emberUi: ember
+    vueUi: vue
+debug: true
+extraEnv:
+- name: CATTLE_LOGLEVEL
+  value: debug
+extraNodeSelectorTerms: {}
+extraObjects: []
+extraTolerations: {}
+fleet: ""
+global:
+  cattle:
+    image:
+      tag: head
+hostname: localhost
+imagePullSecrets: []
+ingress:
+  enabled: true
+  extraAnnotations: {}
+  includeDefaultExtraAnnotations: true
+  ingressClassName: ""
+  path: /
+  pathType: ImplementationSpecific
+  servicePort: 80
+  tls:
+    secretName: tls-rancher-ingress
+    source: letsEncrypt
+letsEncrypt:
+  email: mary@suse.com
+  environment: production
+  ingress:
+    class: ""
+livenessProbe:
+  failureThreshold: 5
+  periodSeconds: 30
+  timeoutSeconds: 5
+noProxy: 127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,.svc,.cluster.local
+postDelete:
+  enabled: true
+  ignoreTimeoutError: false
+  image:
+    repository: rancher/shell
+    tag: v0.5.0
+  namespaceList:
+  - cattle-fleet-system
+  - cattle-system
+  - rancher-operator-system
+  timeout: 120
+preUpgrade:
+  image:
+    repository: rancher/shell
+    tag: v0.5.0
+priorityClassName: rancher-critical
+privateCA: false
+rancherImage: docker.io/rancher/rancher
+readinessProbe:
+  failureThreshold: 5
+  periodSeconds: 30
+  timeoutSeconds: 5
+replicas: 1
+resources: {}
+service:
+  annotations: {}
+  disableHTTP: false
+  type: ""
+startupProbe:
+  failureThreshold: 12
+  periodSeconds: 10
+  timeoutSeconds: 5
+systemDefaultRegistry: ""
+tls: ingress
+topologyKey: kubernetes.io/hostname
+useBundledSystemChart: false
+webhook:
+  debug: true
+  extraEnv:
+    - name: CATTLE_DEBUG
+      value: "true"
+    - name: IGNORE_TLS_HANDSHAKE_ERROR
+      value: "true"
+  image:
+    imagePullPolicy: Always
+    repository: localhost:5000/rancher-webhook
+    tag: latest
+  mcm:
+    enabled: true
+  nodeSelector: {}
+  port: 9443
+  priorityClassName: rancher-critical
+  tolerations: []
+  resources:
+    limits:
+      cpu: 500m
+      ephemeral-storage: 1Gi  # Set an upper limit
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      ephemeral-storage: 500Mi # Request a minimum amount
+      memory: 64Mi
+#  caCerts: ""

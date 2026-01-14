@@ -1,0 +1,65 @@
+{
+  "enabled": true,
+  "ldapConfig": {
+    "actions": {
+      "testAndApply": "https://ip-172-31-12-105.sa-east-1.compute.internal/v3/openLdapConfigs/openldap?action=testAndApply"
+    },
+    "annotations": {
+      "management.cattle.io/auth-provider-cleanup": "rancher-locked"
+    },
+    "baseType": "authConfig",
+    "connectionTimeout": 5000,
+    "created": "2025-12-05T16:37:49Z",
+    "createdTS": 1764952669000,
+    "creatorId": null,
+    "enabled": true,
+    "groupDNAttribute": "entryDN",
+    "groupMemberMappingAttribute": "member",
+    "groupMemberUserAttribute": "member",
+    "groupNameAttribute": "cn",
+    "groupObjectClass": "groupOfNames",
+    "groupSearchAttribute": "cn",
+    "id": "openldap",
+    "labels": {
+      "cattle.io/creator": "norman"
+    },
+    "links": {
+      "self": "https://ip-172-31-12-105.sa-east-1.compute.internal/v3/openLdapConfigs/openldap",
+      "update": "https://ip-172-31-12-105.sa-east-1.compute.internal/v3/openLdapConfigs/openldap"
+    },
+    "logoutAllSupported": false,
+    "name": "openldap",
+    "nestedGroupMembershipEnabled": false,
+    "port": 389,
+    "searchUsingServiceAccount": false,
+    "starttls": false,
+    "status": {
+      "conditions": null,
+      "type": "/v3/schemas/authConfigStatus"
+    },
+    "tls": false,
+    "type": "openLdapConfig",
+    "userDisabledBitMask": 0,
+    "userLoginAttribute": "uid",
+    "userMemberAttribute": "memberOf",
+    "userNameAttribute": "cn",
+    "userObjectClass": "inetOrgPerson",
+    "userSearchAttribute": "uid|cn|givenName",
+    "uuid": "16864943-7d61-4a23-985b-a649a4ffdc9c",
+    "__clone": true,
+    "servers": [
+      "172.31.12.105"
+    ],
+    "accessMode": "unrestricted",
+    "disabledStatusBitmask": "0",
+    "serviceAccountDistinguishedName": "cn=admin-ldap,ou=admin,dc=mock,dc=com",
+    "serviceAccountPassword": "sl1kFY2ZuFFunX2u",
+    "userSearchBase": "ou=users,dc=mock,dc=com",
+    "groupSearchBase": "ou=groups,dc=mock,dc=com",
+    "userLoginFilter": "",
+    "userSearchFilter": "",
+    "certificate": ""
+  },
+  "username": "admin-ldap",
+  "password": "sl1kFY2ZuFFunX2u"
+}

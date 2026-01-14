@@ -1,0 +1,62 @@
+# Version information (optional, but good practice)
+version: 1
+
+# Entry 1: Organizational Unit for Users
+dn: ou=users,dc=mock,dc=com
+objectClass: organizationalUnit
+ou: users
+
+# Entry 2: Organizational Unit for Administrators (Users)
+dn: ou=admin,dc=mock,dc=com
+objectClass: organizationalUnit
+ou: admin
+
+# Entry 3: Organizational Unit for Groups (NEW ADDITION)
+dn: ou=groups,dc=mock,dc=com
+objectClass: organizationalUnit
+ou: groups
+
+# Entry 4: User 1: alice (Regular User)
+dn: cn=alice,ou=users,dc=mock,dc=com
+objectClass: inetOrgPerson
+cn: alice
+sn: Alice
+mail: alice@mock.com
+uid: alice
+userPassword: password123
+
+# Entry 5: User 2: bob (Regular User)
+dn: cn=bob,ou=users,dc=mock,dc=com
+objectClass: inetOrgPerson
+cn: bob
+sn: Bob
+mail: bob@mock.com
+uid: bob
+userPassword: password123
+
+# Entry 6: User 3: admin-ldap (Service Account / Admin User)
+# This user is typically placed outside the regular 'ou=users' for security/clarity
+dn: cn=admin-ldap,ou=admin,dc=mock,dc=com
+objectClass: inetOrgPerson
+cn: admin-ldap
+sn: admin-ldap
+mail: admin-ldap@mock.com
+uid: admin-ldap
+userPassword: sl1kFY2ZuFFunX2u
+
+# Entry 7: Group 1: rancher-admins (Rancher Admin Group) (NEW ADDITION)
+# This group is used to grant admin access in Rancher
+dn: cn=rancher-admins,ou=groups,dc=mock,dc=com
+objectClass: groupOfNames
+cn: rancher-admins
+description: Users with Rancher Global Admin privileges
+# Members are specified by their full Distinguished Name (DN)
+member: cn=admin-ldap,ou=admin,dc=mock,dc=com
+member: cn=alice,ou=users,dc=mock,dc=com
+
+# Entry 8: Group 2: developers (Standard Group) (NEW ADDITION)
+dn: cn=developers,ou=groups,dc=mock,dc=com
+objectClass: groupOfNames
+cn: developers
+description: Users in the Development Team
+member: cn=bob,ou=users,dc=mock,dc=com

@@ -1,0 +1,11 @@
+dn: ou=users,dc=mock,dc=com
+objectClass: organizationalUnit
+ou: users
+
+dn: ou=admin,dc=mock,dc=com
+objectClass: organizationalUnit
+ou: admin
+
+dn: ou=groups,dc=mock,dc=com
+objectClass: organizationalUnit
+ou: groups

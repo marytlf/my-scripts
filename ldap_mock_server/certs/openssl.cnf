@@ -1,0 +1,31 @@
+[ req ]
+default_bits = 4096
+prompt = no
+default_md = sha256
+distinguished_name = dn
+x509_extensions = v3_ca
+
+[ dn ]
+C = BR
+ST = Brazil
+L = Sao Paulo
+O = Mock-LDAP-CA
+CN = mock-ldap
+
+[ v3_ca ]
+subjectKeyIdentifier = hash
+authorityKeyIdentifier = keyid:always,issuer
+basicConstraints = critical, CA:true
+keyUsage = critical, digitalSignature, cRLSign, keyCertSign
+
+[ v3_ext ]
+subjectAltName = @alt_names
+basicConstraints = CA:FALSE
+keyUsage = digitalSignature, keyEncipherment
+extendedKeyUsage = serverAuth
+
+[ alt_names ]
+IP.1 = 172.31.12.105
+IP.2 = 127.0.0.1
+DNS.1 = ip-172-31-12-105
+DNS.2 = localhost

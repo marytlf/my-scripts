@@ -1,0 +1,37 @@
+dn: cn=alice,ou=users,dc=mock,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+cn: alice
+sn: Alice
+mail: alice@mock.com
+uid: alice
+userPassword: password123
+
+dn: cn=bob,ou=users,dc=mock,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+cn: bob
+sn: Bob
+mail: bob@mock.com
+uid: bob
+userPassword: password123
+
+dn: cn=admin-ldap,ou=admin,dc=mock,dc=com
+objectClass: inetOrgPerson
+objectClass: organizationalPerson
+cn: admin-ldap
+sn: admin-ldap
+mail: admin-ldap@mock.com
+uid: admin-ldap
+userPassword: sl1kFY2ZuFFunX2u
+
+dn: cn=rancher-admins,ou=groups,dc=mock,dc=com
+objectClass: groupOfNames
+cn: rancher-admins
+member: cn=admin-ldap,ou=admin,dc=mock,dc=com
+member: cn=alice,ou=users,dc=mock,dc=com
+
+dn: cn=developers,ou=groups,dc=mock,dc=com
+objectClass: groupOfNames
+cn: developers
+member: cn=bob,ou=users,dc=mock,dc=com

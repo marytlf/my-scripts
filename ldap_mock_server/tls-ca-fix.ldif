@@ -1,0 +1,7 @@
+dn: cn=config
+changetype: modify
+replace: olcTLSCACertFile
+olcTLSCACertFile: /container/service/slapd/assets/certs/ca.crt
+-
+replace: olcTLSCACertPath
+olcTLSCACertPath: /container/service/slapd/assets/certs

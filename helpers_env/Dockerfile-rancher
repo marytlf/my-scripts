@@ -1,0 +1,15 @@
+# Use the smallest possible image, which is completely empty.
+FROM scratch
+
+# Copy the locally compiled binary into the image.
+COPY rancher /usr/local/bin/rancher-server
+
+# Copy the CA certificates from your host machine.
+# These are necessary for the binary to make secure TLS connections.
+#COPY /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+
+# Expose the ports that the Rancher server will use.
+EXPOSE 80 443
+
+# Set the command to run the binary.
+ENTRYPOINT ["/usr/local/bin/rancher-server"]

@@ -1,0 +1,10 @@
+apiVersion: policy/v1
+kind: PodDisruptionBudget
+metadata:
+  name: test-pdb
+  namespace: novo-projeto
+spec:
+  maxUnavailable: 3
+  selector:
+    matchLabels:
+      app: test-app

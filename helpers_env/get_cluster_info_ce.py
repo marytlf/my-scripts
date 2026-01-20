@@ -342,19 +342,6 @@ def get_network_drops_local():
     return "\n".join(result_lines)
 
 
-def save_nodes_describe(base_dir):
-    nodes_dir = os.path.join(base_dir, "describes", "nodes")
-    os.makedirs(nodes_dir, exist_ok=True)
-    print("Describing all nodes...")
-    nodes = get_all_nodes()
-    for node in nodes:
-        filepath = os.path.join(nodes_dir, f"{node}.txt")
-        desc = run_cmd(f"kubectl describe node {node}")
-        if desc:
-            with open(filepath, "w") as f:
-                f.write(desc)
-
-
 def save_k8s_system_logs(base_dir):
     """Save K8s system logs locally (single-node execution)."""
     syslog_dir = os.path.join(base_dir, "k8s_system_logs")
@@ -751,14 +738,6 @@ def main():
 
     # Resources to describe per namespace (local kubectl)
     namespaced_resources = [
-        "pods",
-        "deployments",
-        "statefulsets",
-        "replicasets",
-        "services",
-        "endpoints",
-        "ingress",
-        "daemonsets",
         "projects",
         "clusters",
     ]
@@ -775,22 +754,22 @@ def main():
         save_describe("customresourcedefinitions", crd, None, base_dir)
 
     # Save OS info locally (single-node)
-    save_os_info(base_dir)
+    #save_os_info(base_dir)
 
     # Save detailed system info locally (single-node, new function)
-    save_detailed_system_info(base_dir)
+    #save_detailed_system_info(base_dir)
 
     # Save machines info (cluster-wide, local kubectl)
-    save_machines(base_dir)
+    #save_machines(base_dir)
     
     #Save users info
     save_users(base_dir)
 
     # Save machinesets info (in openshift-machine-api namespace, local kubectl)
-    save_machinesets(base_dir)
+    #save_machinesets(base_dir)
     
     # Save machinedeployments info (in openshift-machine-api namespace, local kubectl)
-    save_machinedeployments(base_dir)
+    #save_machinedeployments(base_dir)
 
     # Save nodes describe (cluster-wide, local kubectl)
     save_nodes_describe(base_dir)
@@ -808,22 +787,22 @@ def main():
     save_kubectl_top(base_dir)
 
     # Save Kubernetes versions (local kubectl)
-    save_k8s_versions(base_dir)
+    #save_k8s_versions(base_dir)
     
     # Save cluster events (cluster-wide, local kubectl)
     save_cluster_events(base_dir)
     
     # Save network policies (per namespace, local kubectl)
-    save_network_policies(base_dir, namespaces)
+    #save_network_policies(base_dir, namespaces)
     
     # Save storage info (cluster-wide and per namespace, local kubectl)
-    save_storage_info(base_dir, namespaces)
+    #save_storage_info(base_dir, namespaces)
     
     # Save RBAC info (cluster-wide and per namespace, local kubectl)
     save_rbac_info(base_dir, namespaces)
     
     # Save ingress classes (cluster-wide, local kubectl)
-    save_ingress_classes(base_dir)
+    #save_ingress_classes(base_dir)
     
     print(f"Backup completed in folder: {base_dir}")
 

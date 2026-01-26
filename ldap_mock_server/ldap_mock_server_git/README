@@ -1,0 +1,20 @@
+#HOW TO
+Pre-requisite
+Have docker and docker-compose installed
+
+Start ldap-mock
+
+1) Generate the certificates
+   cd ldap_mock_server_git
+   ./cert_generator_v3.sh
+2) Bring up docker container
+    docker-compose up -d
+
+How to access?
+If non-tls http://publicIP:389
+If using tls https://publicIP:636
+
+NOTE: 
+If you don t want to use certificates, disable it on the docker-compose.yml file changing the variable LDAP_TLS=false.
+If you want to include more users, include it on the file ldap-data/02-users.ldif
+

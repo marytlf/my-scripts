@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: conceptual-fail
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: conceptual-fail
+  template:
+    metadata:
+      labels:
+        app: conceptual-fail
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:latest
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            # CONCEPTUAL ERROR 1: Requesting a non-existent resource type
+            # Syntax is valid, but the scheduler will never find a node with this.
+            example.com/missing-gpu: 1
+        livenessProbe:
+          # CONCEPTUAL ERROR 2: Probing a port that the image doesn't listen on
+          # Nginx listens on 80, not 9999. The pod will constantly restart.
+          httpGet:
+            path: /
+            port: 9999
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      nodeSelector:
+        # CONCEPTUAL ERROR 3: Targetting a non-existent OS
+        # Syntax is valid, but unless you named a node 'TempleOS', it will stay 'Pending'.
+        kubernetes.io/os: templeos

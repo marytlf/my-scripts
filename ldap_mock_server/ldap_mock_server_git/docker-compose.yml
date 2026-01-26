@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  ldap:
+    image: osixia/openldap:latest
+    container_name: mock-ldap
+    ports:
+      - "389:389"
+      - "636:636"
+    environment:
+      - LDAP_ORGANISATION=MockCorp
+      - LDAP_DOMAIN=mock.com
+      - LDAP_ADMIN_PASSWORD=testpass
+      # TLS Configuration - Use _FILENAME for assets/certs/ folder mapping
+      - LDAP_TLS=true
+      - LDAP_TLS_CRT_FILENAME=ldap.crt
+      - LDAP_TLS_KEY_FILENAME=ldap.key
+      - LDAP_TLS_CA_CRT_FILENAME=ca.crt
+      # Set to allow to avoid client-side cert requirements during mock testing
+      - LDAP_TLS_VERIFY_CLIENT=allow
+      - LDAP_LOGLEVEL=256
+    volumes:
+      - ./certs/ldap.crt:/container/service/slapd/assets/certs/ldap.crt
+      - ./certs/ldap.key:/container/service/slapd/assets/certs/ldap.key
+      - ./certs/ca.crt:/container/service/slapd/assets/certs/ca.crt
+      - ./ldap-data:/container/service/slapd/assets/data
+      - ./init-ldap.sh:/container/run/startup/init-ldap.sh

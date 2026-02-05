@@ -16,6 +16,7 @@ spec:
       namespace: novo-projeto
       labels:
         app: test-app
+        cluster.x-k8s.io/drain: skip
     spec:
       containers:
       - name: nginx-container

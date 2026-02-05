@@ -13,9 +13,9 @@ import (
 )
 // --- Configuration ---
 const (
-	Host        = "https://ec2-54-172-174-114.compute-1.amazonaws.com"
+	Host        = "https://"
 	Username    = "admin"
-	Password    = "akV3vIVVxM7gTTwo"
+	Password    = ""
 	WaitSeconds = 30
 	APITimeout  = 30 * time.Second
 )

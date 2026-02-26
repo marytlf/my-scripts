@@ -29,7 +29,7 @@ echo "--- Starting Cluster Generation ---"
 
 for i in $(seq 1 $NUM_CLUSTERS); do
     CLUSTER_INDEX=$(printf "%02d" $i)
-    CLUSTER_NAME="load-cluster-${CLUSTER_INDEX}"
+    CLUSTER_NAME="mary-ds-cluster-${CLUSTER_INDEX}"
     
     # 1. Generate ALL Unique IDs/Names
     CLUSTER_UID=$(generate_uid) # New UID for the Cluster resource

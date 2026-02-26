@@ -2,8 +2,8 @@
 
 # --- CONFIGURATION VARIABLES ---
 # The IP/Hostname your clients will use to connect to the LDAP server
-IP_ADDR="172.31.12.105"
-HOST_FQDN="ip-172-31-12-105"
+IP_ADDR="$(hostname -i | awk -F\  '{print $1}')"
+HOST_FQDN="$(hostname)"
 
 # The base path where the certificates will be created (Your current directory)
 BASE_DIR=$(pwd)
@@ -88,7 +88,8 @@ load_ldap_data() {
 create_openssl_config() {
     # Set variables for new directory and host details
     DATE_STR=$(date +%Y%m%d_%H%M%S)
-    CERT_DIR="certificates_$DATE_STR"
+    #CERT_DIR="certificates_$DATE_STR"
+    CERT_DIR="certs"
     export CERT_DIR
 
     # Create a clean directory and enter it
@@ -189,6 +190,13 @@ sign_server_cert() {
         -extensions v3_ext
 }
 
+change_names(){
+    echo "Changing names..."
+    mv ldap-server.key ldap.key 
+    mv ca-root.crt ca.crt 
+    mv ldap-server.crt ldap.crt 
+}
+
 verify_certs() {
     echo "Verifying key pair match..."
     # 6. Verify that the server key and server certificate match
@@ -200,6 +208,7 @@ verify_certs() {
         echo "Creating chained server certificate (ldap-chained.crt)..."
         cat ldap-server.crt ca-root.crt > ldap-chained.crt
         chmod 600 ldap-server.key ca-root.key 
+        change_names
         echo "Changing file ownership to UID:911 for container access..."
         sudo chown -R 911:911 ./*
         
@@ -213,6 +222,8 @@ verify_certs() {
     cd "$BASE_DIR" # Return to the starting directory
     echo "New certificates are ready in directory: ${CERT_DIR}"
 }
+
+
 
 run_docker_old() {
     echo "--- Running Docker container with new certificates ---"
@@ -317,7 +328,7 @@ run_full_generation() {
     
     #create_ou_ldif
     #create_tls_fix_ldif
-    run_docker
+    #run_docker
 }
 
 run_full_generation

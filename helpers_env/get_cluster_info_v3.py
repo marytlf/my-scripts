@@ -721,11 +721,13 @@ def main():
     # Save pods -o wide for all namespaces (cluster-wide, local kubectl)
     save_pods_wide(base_dir, namespaces)
 
+    invalid_prefixes = ("c-m", "p-", "user-", "u-")
     # Get logs for all pods in all namespaces (cluster-wide, local kubectl)
     for ns in namespaces:
-        pods = get_pods(ns)
-        for pod in pods:
-            save_logs(ns, pod, date_str, base_dir)
+        if not ns.startswith(invalid_prefixes):
+            pods = get_pods(ns)
+            for pod in pods:
+                save_logs(ns, pod, date_str, base_dir)
 
     # Resources to describe cluster-wide (no namespace, local kubectl)
     cluster_resources = ["apiservices"]

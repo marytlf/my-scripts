@@ -23,7 +23,7 @@ accessKey: ""
 ami: ""
 instanceType: t2.xlarge # Using t2.xlarge as per your template
 keypairName: ""
-region: sa-east-1
+region: us-east-1
 rootSize: "16"
 secretKey: ""
 securityGroup:

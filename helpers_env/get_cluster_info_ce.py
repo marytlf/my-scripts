@@ -32,6 +32,32 @@ def run_cmd(cmd):
     return result.stdout.strip()
 
 
+def save_resource_yaml_all_namespaces(resource_type, base_dir):
+    """
+    Saves all resources of a specific type across all namespaces 
+    into a single YAML file within an incremental folder structure.
+    """
+    # Create category directory (e.g., base/yamls/pods/)
+    yaml_dir = os.path.join(base_dir, "resources_yaml", resource_type)
+    os.makedirs(yaml_dir, exist_ok=True)
+    
+    filename = f"all_{resource_type}.yaml"
+    filepath = os.path.join(yaml_dir, filename)
+    
+    print(f"Exporting all {resource_type} to YAML...")
+    
+    # The command requested: kubectl get <resource> -A -o yaml
+    cmd = f"kubectl get {resource_type} -A -o yaml"
+    output = run_cmd(cmd)
+    
+    if output:
+        with open(filepath, "w") as f:
+            f.write(f"# Generated at: {datetime.now()}\n")
+            f.write(f"# Command: {cmd}\n---\n")
+            f.write(output)
+    else:
+        print(f"No resources found or error for: {resource_type}")
+
 def get_node_name():
     # Try to get node name from environment or hostname
     # If running inside a pod, NODE_NAME env var might be set
@@ -700,79 +726,43 @@ def main():
     date_str = datetime.now().strftime("%Y-%m-%d")
     node_name = get_node_name()
 
-    base_dir_name = f"k8s_backup_{node_name}_{date_str}"
+    # Incremental folder logic
+    base_dir_name = f"k8s_dump_{node_name}_{date_str}"
     base_dir = create_incremental_path(base_dir_name)
     os.makedirs(base_dir, exist_ok=True)
 
-    namespaces = get_all_namespaces()
-    if not namespaces:
-        print("No namespaces found or error fetching namespaces.")
-        return
-
-    # For local-only functions, use current node
-    nodes = get_current_node()
-    node_ips = get_nodes_with_ips()  # Still fetch all for port scans (cluster-wide)
-
-    if not node_ips:
-        print("No node IPs found.")
-        return
-
-    # Save node port scans (scans all nodes from current node)
-    #save_node_port_scans(base_dir, node_ips)
-
-    # Save pods -o wide for all namespaces (cluster-wide, local kubectl)
-    save_pods_wide(base_dir, namespaces)
-
-    # Get logs for all pods in all namespaces (cluster-wide, local kubectl)
-    for ns in namespaces:
-        pods = get_pods(ns)
-        for pod in pods:
-            save_logs(ns, pod, date_str, base_dir)
-
-    # Resources to describe cluster-wide (no namespace, local kubectl)
-    cluster_resources = ["apiservices"]
-    for res in cluster_resources:
-        names = get_resource_names(res)
-        for name in names:
-            save_describe(res, name, None, base_dir)
-
-    # Resources to describe per namespace (local kubectl)
-    namespaced_resources = [
+    # Define resource types to capture
+    # These will be saved as one big YAML per type (efficient)
+    resource_types = [
+        "nodes",
+        "users",
         "projects",
-        "clusters",
+        "namespaces",
+        "pods",
+        "deployments",
+        "statefulsets",
+        "services",
+        "configmaps",
+        "secrets",
+        "ingress",
+        "machines",
+        "machinedeployments",
+        "machinesets",
+        "persistentvolumes",
+        "persistentvolumeclaims",
+        "customresourcedefinitions",
+        "mutatingwebhookconfigurations",
+        "validatingwebhookconfigurations",
+        "roles",
+        "rolebindings",
+        "globalrole",
+        "clusterroles",
+        "clusterrolebindings",
+        "projectroletemplatebindings",
     ]
 
-    for ns in namespaces:
-        for res in namespaced_resources:
-            names = get_resource_names(res, ns)
-            for name in names:
-                save_describe(res, name, ns, base_dir)
-
-    # Handle CRDs cluster-wide (they are cluster scoped, local kubectl)
-    crds = get_resource_names("customresourcedefinitions")
-    for crd in crds:
-        save_describe("customresourcedefinitions", crd, None, base_dir)
-
-    # Save OS info locally (single-node)
-    #save_os_info(base_dir)
-
-    # Save detailed system info locally (single-node, new function)
-    #save_detailed_system_info(base_dir)
-
-    # Save machines info (cluster-wide, local kubectl)
-    #save_machines(base_dir)
-    
-    #Save users info
-    save_users(base_dir)
-
-    # Save machinesets info (in openshift-machine-api namespace, local kubectl)
-    #save_machinesets(base_dir)
-    
-    # Save machinedeployments info (in openshift-machine-api namespace, local kubectl)
-    #save_machinedeployments(base_dir)
-
-    # Save nodes describe (cluster-wide, local kubectl)
-    save_nodes_describe(base_dir)
+    for res in resource_types:
+        save_resource_yaml_all_namespaces(res, base_dir)
 
     # Save Kubernetes system logs locally (single-node)
     save_k8s_system_logs(base_dir)
@@ -785,9 +775,6 @@ def main():
 
     # Save kubectl top info (cluster-wide, local kubectl)
     save_kubectl_top(base_dir)
-
-    # Save Kubernetes versions (local kubectl)
-    #save_k8s_versions(base_dir)
     
     # Save cluster events (cluster-wide, local kubectl)
     save_cluster_events(base_dir)
@@ -795,16 +782,9 @@ def main():
     # Save network policies (per namespace, local kubectl)
     #save_network_policies(base_dir, namespaces)
     
-    # Save storage info (cluster-wide and per namespace, local kubectl)
-    #save_storage_info(base_dir, namespaces)
     
-    # Save RBAC info (cluster-wide and per namespace, local kubectl)
-    save_rbac_info(base_dir, namespaces)
-    
-    # Save ingress classes (cluster-wide, local kubectl)
-    #save_ingress_classes(base_dir)
-    
-    print(f"Backup completed in folder: {base_dir}")
+    print(f"\nDump completed successfully!")
+    print(f"Data saved in: {base_dir}")
 
 if __name__ == "__main__":
     main()

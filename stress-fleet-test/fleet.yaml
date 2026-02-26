@@ -1,0 +1,10 @@
+# stress-test/fleet.yaml
+kind: Bundle
+metadata:
+  name: fleet-heavy-load
+spec:
+  # Target all clusters or a specific label
+  targets:
+  - clusterSelector:
+      matchLabels:
+        management.cattle.io/cluster-display-name: "mary-ds-cluster-01"

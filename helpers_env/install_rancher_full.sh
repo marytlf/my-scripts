@@ -78,7 +78,7 @@ create_kubeconfig_k3s(){
 create_kubeconfig_rke2(){
     cd ~
     mkdir -p .kube
-    sudo cp /etc/rancher/rke2/rke2.yaml /home/ubuntu/kube/config
+    sudo cp /etc/rancher/rke2/rke2.yaml /home/ubuntu/.kube/config
     sudo chown ubuntu:ubuntu /home/ubuntu/.kube/config 
     sudo chmod 600 /home/ubuntu/.kube/config
 }

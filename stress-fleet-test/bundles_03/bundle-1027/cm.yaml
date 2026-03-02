@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleet-bundle-1027
+  namespace: default
+data:
+  i: "1027"

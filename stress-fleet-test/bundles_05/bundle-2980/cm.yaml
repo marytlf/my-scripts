@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleet-bundle-2980
+  namespace: default
+data:
+  i: "2980"

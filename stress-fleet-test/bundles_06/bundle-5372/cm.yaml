@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fleet-bundle-5372
+  namespace: bundle-6
+data:
+  i: "5372"

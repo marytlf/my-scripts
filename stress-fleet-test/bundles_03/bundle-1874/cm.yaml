@@ -2,6 +2,6 @@ apiVersion: v1
 kind: ConfigMap
 metadata:
   name: fleet-bundle-1874
-  namespace: default
+  namespace: bundle-3
 data:
   i: "1874"

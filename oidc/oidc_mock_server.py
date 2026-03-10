@@ -11,6 +11,10 @@ app = Flask(__name__)
 
 # --- Configuration ---
 EXTERNAL_IP = ""
+
+if (EXTERNAL_IP == ""):
+    EXTERNAL_IP = input("Enter external IP/DNS (without https://): ")
+
 PORT = 44065
 BASE_URL = f"http://{EXTERNAL_IP}:{PORT}"
 

@@ -1,0 +1,1600 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-1
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-1
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-2
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-2
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-3
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-3
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-4
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-4
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-5
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-5
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-6
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-6
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-7
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-7
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-8
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-8
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-9
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-9
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-10
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-10
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-11
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-11
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-12
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-12
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-13
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-13
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-14
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-14
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-15
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-15
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-16
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-16
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-17
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-17
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-18
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-18
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-19
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-19
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-20
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-20
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-21
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-21
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-22
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-22
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-23
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-23
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-24
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-24
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-25
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-25
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-26
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-26
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-27
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-27
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-28
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-28
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-29
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-29
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-30
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-30
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-31
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-31
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-32
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-32
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-33
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-33
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-34
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-34
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-35
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-35
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-36
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-36
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-37
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-37
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-38
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-38
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-39
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-39
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-40
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-40
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-41
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-41
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-42
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-42
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-43
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-43
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-44
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-44
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-45
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-45
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-46
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-46
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-47
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-47
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-48
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-48
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-49
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-49
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-50
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-50
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-51
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-51
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-52
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-52
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-53
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-53
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-54
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-54
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-55
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-55
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-56
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-56
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-57
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-57
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-58
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-58
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-59
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-59
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-60
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-60
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-61
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-61
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-62
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-62
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-63
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-63
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-64
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-64
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-65
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-65
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-66
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-66
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-67
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-67
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-68
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-68
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-69
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-69
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-70
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-70
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-71
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-71
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-72
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-72
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-73
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-73
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-74
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-74
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-75
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-75
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-76
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-76
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-77
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-77
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-78
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-78
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-79
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-79
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-80
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-80
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-81
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-81
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-82
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-82
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-83
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-83
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-84
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-84
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-85
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-85
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-86
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-86
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-87
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-87
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-88
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-88
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-89
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-89
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-90
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-90
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-91
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-91
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-92
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-92
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-93
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-93
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-94
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-94
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-95
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-95
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-96
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-96
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-97
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-97
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-98
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-98
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-99
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-99
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: test-ns-100
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox
+  namespace: test-ns-100
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    command: ["sh", "-c", "sleep 3600"]

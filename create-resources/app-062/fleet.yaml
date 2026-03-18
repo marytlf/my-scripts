@@ -1,0 +1,25 @@
+defaultNamespace: ns-062
+labels:
+  app: busybox-suite
+  instance: "062"
+
+# Resources to be deployed
+resourceLabels:
+  heritage: fleet
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-062
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-pod
+  namespace: ns-062
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    args: [/bin/sh, -c, "sleep 3600"]

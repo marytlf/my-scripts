@@ -1,0 +1,25 @@
+defaultNamespace: ns-003
+labels:
+  app: busybox-suite
+  instance: "003"
+
+# Resources to be deployed
+resourceLabels:
+  heritage: fleet
+
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: ns-003
+---
+apiVersion: v1
+kind: Pod
+metadata:
+  name: busybox-pod
+  namespace: ns-003
+spec:
+  containers:
+  - name: busybox
+    image: busybox
+    args: [/bin/sh, -c, "sleep 3600"]

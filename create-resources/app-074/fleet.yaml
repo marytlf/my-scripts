@@ -1,4 +1,4 @@
 defaultNamespace: ns-074
 labels:
-  app: busybox-test
+  app: busybox-deployment
   instance: "074"

@@ -1,25 +1,4 @@
 defaultNamespace: ns-079
 labels:
-  app: busybox-suite
+  app: busybox-test
   instance: "079"
-
-# Resources to be deployed
-resourceLabels:
-  heritage: fleet
-
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ns-079
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: busybox-pod
-  namespace: ns-079
-spec:
-  containers:
-  - name: busybox
-    image: busybox
-    args: [/bin/sh, -c, "sleep 3600"]

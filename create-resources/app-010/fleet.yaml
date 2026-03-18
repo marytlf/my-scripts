@@ -1,25 +1,4 @@
 defaultNamespace: ns-010
 labels:
-  app: busybox-suite
+  app: busybox-test
   instance: "010"
-
-# Resources to be deployed
-resourceLabels:
-  heritage: fleet
-
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: ns-010
----
-apiVersion: v1
-kind: Pod
-metadata:
-  name: busybox-pod
-  namespace: ns-010
-spec:
-  containers:
-  - name: busybox
-    image: busybox
-    args: [/bin/sh, -c, "sleep 3600"]

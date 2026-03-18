@@ -45,14 +45,14 @@ sleep 60
 #  --set rancherImageTag=head \
 #  --set "extraEnv[0].name=CATTLE_SERVER_URL" \
 #  --set "extraEnv[1].name=CATTLE_AGENT_IMAGE" \
-#  --set hostname=ip-172-31-36-232.sa-east-1.compute.internal \
+#  --set hostname=ip-172-31-36-232.ec2.internal \
 #  --set bootstrapPassword=admin \
 #  --set agentTLSMode=system-store \
 #  --set replicas=1 --create-namespace \
 #  --set global.cattle.image.repository=docker.io/rancher/rancher \
 #  --set global.cattle.image.tag=v2.12-5814c45fd818a99b0c7a95406445bc85deb535e9-head \
 #  --set global.cattle.image.pullPolicy=Never \
-#  --set "extraEnv[0].value=ip-172-31-36-232.sa-east-1.compute.internal" \
+#  --set "extraEnv[0].value=ip-172-31-36-232.ec2.internal" \
 #  --set "extraEnv[1].value=rancher/rancher-agent:head" \
 #  --version=v2.12.0-alpha9
 #
@@ -60,7 +60,7 @@ sleep 60
 helm repo add rancher-latest https://releases.rancher.com/server-charts/latest
 helm install rancher rancher-latest/rancher \
   --namespace cattle-system \
-  --set hostname=${HOST}.sa-east-1.compute.internal \
+  --set hostname=${HOST}.ec2.internal \
   --set replicas=1 \
   --set bootstrapPassword=admin \
   --version=2.12.0 --create-namespace 

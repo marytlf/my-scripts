@@ -9,9 +9,9 @@ HOSTS_FILE="/etc/hosts"
 usage() {
     echo "Usage: $0 [-a | -r | -d] <ip_address> <hostname_prefix>"
     echo "  -a: Add a new entry to the /etc/hosts file."
-    echo "  -r: Replace an existing entry with the pattern 'sa-east-1.compute.internal'."
+    echo "  -r: Replace an existing entry with the pattern 'ec2.internal'."
     echo "  -d: Delete an existing entry with the provided hostname."
-    echo "  The script will automatically append '.sa-east-1.compute.internal' to the hostname prefix."
+    echo "  The script will automatically append '.ec2.internal' to the hostname prefix."
     exit 1
 }
 
@@ -39,7 +39,7 @@ IP_ADDRESS=$2
 HOSTNAME_PREFIX=$3
 
 # Concatenate the hostname prefix with the full domain name
-FULL_HOSTNAME="${HOSTNAME_PREFIX}.sa-east-1.compute.internal"
+FULL_HOSTNAME="${HOSTNAME_PREFIX}.ec2.internal"
 
 # Use a case statement to handle the different options
 case "$OPTION" in
@@ -53,7 +53,7 @@ case "$OPTION" in
         # Define the regex pattern to find the line to replace
         # This pattern matches any line containing the specified internal domain
         # The 'c' command in sed changes the entire line
-        REGEX_PATTERN="sa-east-1.compute.internal"
+        REGEX_PATTERN="ec2.internal"
 
         echo "Replacing entry with new details: $IP_ADDRESS $FULL_HOSTNAME"
 

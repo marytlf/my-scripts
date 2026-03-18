@@ -38,7 +38,7 @@ helm repo add rancher-alpha https://releases.rancher.com/server-charts/alpha
 helm repo update
 helm install rancher rancher-alpha/rancher \
   --namespace cattle-system \
-  --set hostname=${HOST}.sa-east-1.compute.internal \
+  --set hostname=${HOST}.ec2.internal \
   --set bootstrapPassword=admin \
   --set replicas=1 --create-namespace \
   --version=v2.12.0-alpha9

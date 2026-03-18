@@ -40,6 +40,6 @@ helm upgrade --install rancher rancher-stable/rancher \
   --namespace cattle-system \
   --create-namespace \
   --set replicaCount=3 \
-  --set hostname=${HOST}.sa-east-1.compute.internal \
+  --set hostname=${HOST}.ec2.internal \
   --set bootstrapPassword=admin \
   --version=v2.10.0

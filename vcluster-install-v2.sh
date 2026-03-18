@@ -4,7 +4,7 @@ set -e
 # --- Configuration Variables ---
 VCLUSTER_NAME="rancher-vcluster"
 K3D_CLUSTER_NAME="my-host-cluster"
-#RANCHER_HOSTNAME=$(hostname).sa-east-1.compute.internal
+#RANCHER_HOSTNAME=$(hostname).ec2.internal
 RANCHER_HOSTNAME=$(hostname)
 RANCHER_PASSWORD="admin" # Change this to a secure password
 

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mock-idp-service
+  namespace: default
+spec:
+  selector:
+    app: mock-idp
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 44065 # The port your Python script is listening on

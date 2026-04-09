@@ -1,0 +1,12 @@
+services:
+  okta-simulator:
+    image: kristophjunge/test-saml-idp
+    ports:
+      - "8080:8080"
+      - "8443:8443"
+    environment:
+      # These simulate the Okta app settings
+      SIMPLESAMLPHP_SP_ENTITY_ID: "https://RANCHER_PLACEHOLDER/v1-saml/okta/saml/metadata"
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: "https://RANCHER_PLACEHOLDER/v1-saml/okta/saml/acs"
+      # Define your simulated users and groups here
+      SIMPLESAMLPHP_USERS: "user1:password123:user1@example.com:admin-group,dev-group;user2:password456:user2@example.com:dev-group"

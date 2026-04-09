@@ -1,0 +1,8 @@
+version: "3"
+services:
+  saml-idp:
+    image: mock-saml-idp:latest
+    volumes:
+      - ./rancher_metadata.xml:/app/metadata/rancher_metadata.xml:ro
+    ports:
+      - "5000:5000"

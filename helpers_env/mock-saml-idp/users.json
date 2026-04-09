@@ -1,0 +1,29 @@
+{
+  "users": [
+    {
+      "username": "alice",
+      "email": "alice@mock.com",
+      "groups": ["rancher-devops", "cn=rancher-admins,ou=mock,dc=com"]
+    },
+    {
+      "username": "bob",
+      "email": "bob@mock.com",
+      "groups": ["rancher-devops"]
+    },
+    {
+      "username": "carol",
+      "email": "carol@mock.com",
+      "groups": ["cn=rancher-admins,ou=mock,dc=com"]
+    },
+    {
+      "username": "joao",
+      "email": "joao@mock.com",
+      "groups": ["cn=rancher-admins,ou=mock,dc=com", "rancher-devops"]
+    },
+    {
+      "username": "maria",
+      "email": "maria@mock.com",
+      "groups": ["cn=rancher-admins,ou=mock,dc=com"]
+    }
+  ]
+}

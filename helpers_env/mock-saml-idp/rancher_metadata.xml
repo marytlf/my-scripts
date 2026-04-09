@@ -1,0 +1,25 @@
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" validUntil="2026-04-04T13:14:37.407Z" entityID="https://PLACEHOLDER_URL/v1-saml/okta/saml/metadata">
+  <SPSSODescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" validUntil="2026-04-04T13:14:37.407011988Z" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol" AuthnRequestsSigned="true" WantAssertionsSigned="true">
+    <KeyDescriptor use="encryption">
+      <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <X509Data xmlns="http://www.w3.org/2000/09/xmldsig#">
+          <X509Certificate xmlns="http://www.w3.org/2000/09/xmldsig#">MIID6TCCAtGgAwIBAgIUSo6Ca9nKwldehxhD3aYJ6E+rpEMwDQYJKoZIhvcNAQELBQAwgYMxCzAJBgNVBAYTAkJSMRIwEAYDVQQIDAlTYW8gUGF1bG8xEjAQBgNVBAcMCVNhbyBQYXVsbzENMAsGA1UECgwEbW9jazEQMA4GA1UECwwHcmFuY2hlcjENMAsGA1UEAwwEbW9jazEcMBoGCSqGSIb3DQEJARYNbWFyeUBtb2NrLmNvbTAeFw0yNjA0MDIxMjMzMjBaFw0yNzA0MDIxMjMzMjBaMIGDMQswCQYDVQQGEwJCUjESMBAGA1UECAwJU2FvIFBhdWxvMRIwEAYDVQQHDAlTYW8gUGF1bG8xDTALBgNVBAoMBG1vY2sxEDAOBgNVBAsMB3JhbmNoZXIxDTALBgNVBAMMBG1vY2sxHDAaBgkqhkiG9w0BCQEWDW1hcnlAbW9jay5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCiVji2BM+93zLTWkfIPS7ZLfsrrSoC8ZsfWcbG+qbzWiI8zzfCvHHCDGqKBMzxgVMGQ55Lap75Q5Mg0VuBkkt4flvhCvGHrEpbof/GKsqOSsqldBdpM1X8d/p1uF5QjcSm6U+tZGySII/NTAlZ/km3u+5OtEU6DoG7aZrl2Z4RFLLb39URXJTa7FJEBWIL55q62jz3OVNmc02A+Y3TVQcKQyoop3SY3DDGX62hTRhXQXu9JEwu7wVA7wNCL2zqvZ2LQve9w+shSdxojo/MGvTvmU9LOsfyokmPgvvZyspy5/ksT63riQzBUAFga5lCeJY7OX9/uTK4jcWPlwX2QA0jAgMBAAGjUzBRMB0GA1UdDgQWBBTWjzVtF6ZCIbvPs0z0YC5RU7aWGDAfBgNVHSMEGDAWgBTWjzVtF6ZCIbvPs0z0YC5RU7aWGDAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQApYJPp4FvYdMrVGQBVlfGpftt8hAQKfs9m/gHT7cegiMw4PfjyQ5Qhp/sUTpWl2vKbUdB3665A5FxVcVHbpyEmMaR+KmRhGCzsT1B/HNc0Tl7HxQ7jrVpvREhSVOmH8QFf+6e/31eOMfPqghC8LXsX7H8zQxO+LCLv196D1aVKFnO42H1Sxifr1bgXreeIRDQ0dUGar9c4GCGz6yWOKxtJgsUhM6sJ1qAOiNcTqKa3p77EauYr/vWXZQT87TeC/t+X7zLdyYY7yj1+pPp9FAsbueIsKeuZhSbLy/xHr3Mg/5JvsbeWu/KGdBTxbYyazQRuZ6FXs+l9yTESsyx0KVIo</X509Certificate>
+        </X509Data>
+      </KeyInfo>
+      <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc"></EncryptionMethod>
+      <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes192-cbc"></EncryptionMethod>
+      <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#aes256-cbc"></EncryptionMethod>
+      <EncryptionMethod Algorithm="http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p"></EncryptionMethod>
+    </KeyDescriptor>
+    <KeyDescriptor use="signing">
+      <KeyInfo xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <X509Data xmlns="http://www.w3.org/2000/09/xmldsig#">
+          <X509Certificate xmlns="http://www.w3.org/2000/09/xmldsig#">MIID6TCCAtGgAwIBAgIUSo6Ca9nKwldehxhD3aYJ6E+rpEMwDQYJKoZIhvcNAQELBQAwgYMxCzAJBgNVBAYTAkJSMRIwEAYDVQQIDAlTYW8gUGF1bG8xEjAQBgNVBAcMCVNhbyBQYXVsbzENMAsGA1UECgwEbW9jazEQMA4GA1UECwwHcmFuY2hlcjENMAsGA1UEAwwEbW9jazEcMBoGCSqGSIb3DQEJARYNbWFyeUBtb2NrLmNvbTAeFw0yNjA0MDIxMjMzMjBaFw0yNzA0MDIxMjMzMjBaMIGDMQswCQYDVQQGEwJCUjESMBAGA1UECAwJU2FvIFBhdWxvMRIwEAYDVQQHDAlTYW8gUGF1bG8xDTALBgNVBAoMBG1vY2sxEDAOBgNVBAsMB3JhbmNoZXIxDTALBgNVBAMMBG1vY2sxHDAaBgkqhkiG9w0BCQEWDW1hcnlAbW9jay5jb20wggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCiVji2BM+93zLTWkfIPS7ZLfsrrSoC8ZsfWcbG+qbzWiI8zzfCvHHCDGqKBMzxgVMGQ55Lap75Q5Mg0VuBkkt4flvhCvGHrEpbof/GKsqOSsqldBdpM1X8d/p1uF5QjcSm6U+tZGySII/NTAlZ/km3u+5OtEU6DoG7aZrl2Z4RFLLb39URXJTa7FJEBWIL55q62jz3OVNmc02A+Y3TVQcKQyoop3SY3DDGX62hTRhXQXu9JEwu7wVA7wNCL2zqvZ2LQve9w+shSdxojo/MGvTvmU9LOsfyokmPgvvZyspy5/ksT63riQzBUAFga5lCeJY7OX9/uTK4jcWPlwX2QA0jAgMBAAGjUzBRMB0GA1UdDgQWBBTWjzVtF6ZCIbvPs0z0YC5RU7aWGDAfBgNVHSMEGDAWgBTWjzVtF6ZCIbvPs0z0YC5RU7aWGDAPBgNVHRMBAf8EBTADAQH/MA0GCSqGSIb3DQEBCwUAA4IBAQApYJPp4FvYdMrVGQBVlfGpftt8hAQKfs9m/gHT7cegiMw4PfjyQ5Qhp/sUTpWl2vKbUdB3665A5FxVcVHbpyEmMaR+KmRhGCzsT1B/HNc0Tl7HxQ7jrVpvREhSVOmH8QFf+6e/31eOMfPqghC8LXsX7H8zQxO+LCLv196D1aVKFnO42H1Sxifr1bgXreeIRDQ0dUGar9c4GCGz6yWOKxtJgsUhM6sJ1qAOiNcTqKa3p77EauYr/vWXZQT87TeC/t+X7zLdyYY7yj1+pPp9FAsbueIsKeuZhSbLy/xHr3Mg/5JvsbeWu/KGdBTxbYyazQRuZ6FXs+l9yTESsyx0KVIo</X509Certificate>
+        </X509Data>
+      </KeyInfo>
+    </KeyDescriptor>
+    <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="https://PLACEHOLDER_URL/v1-saml/okta/saml/acs" index="1"></AssertionConsumerService>
+    <AssertionConsumerService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Artifact" Location="https//PLACEHOLDER_URL/v1-saml/okta/saml/acs" index="2"></AssertionConsumerService>
+  </SPSSODescriptor>
+</EntityDescriptor>
